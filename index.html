@@ -205,7 +205,8 @@
         </div>
         <div>
           <label for="f-amount">Amount (Rs)</label>
-          <input type="number" id="f-amount" placeholder="0" min="0" step="1">
+          <input type="number" id="f-amount" value="0" min="0" step="1" readonly aria-describedby="amountHint">
+          <span class="hint" id="amountHint">&#8377;250 per ticket — auto-calculated</span>
         </div>
       </div>
 
@@ -213,6 +214,12 @@
       <select id="f-status">
         <option value="paid">Received</option>
         <option value="due">Pending</option>
+      </select>
+
+      <label for="f-payment-mode">Payment mode</label>
+      <select id="f-payment-mode">
+        <option value="online">Online</option>
+        <option value="offline">Offline</option>
       </select>
 
       <label for="f-note">Note (optional)</label>
@@ -254,6 +261,7 @@
 (function(){
   "use strict";
   var TOTAL = 100;
+  var TICKET_PRICE = 250;
   var LS = "dandiya_pass_register_v1";
   var FIREBASE_CONFIG = {
     apiKey: "",
@@ -458,7 +466,7 @@
       mid.appendChild(nm); mid.appendChild(sub);
       var amt = document.createElement("div"); amt.className = "amt";
       amt.innerHTML = money(b.amount) + '<br><span class="tag ' + (b.status === "due" ? "due" : "paid") + '">' +
-        (b.status === "due" ? "Pending" : "Received") + "</span>";
+        (b.status === "due" ? "Pending" : "Received") + " · " + paymentModeLabel(b.paymentMode) + "</span>";
       row.appendChild(dot); row.appendChild(mid); row.appendChild(amt);
       listEl.appendChild(row);
     });
@@ -467,6 +475,9 @@
   }
   function stat(cls, val, label){
     return '<div class="stat ' + cls + '"><b>' + val + "</b><span>" + label + "</span></div>";
+  }
+  function paymentModeLabel(mode){
+    return mode === "offline" ? "Offline" : "Online";
   }
   function renderChips(){
     var c = $("chips"); c.innerHTML = "";
@@ -478,6 +489,9 @@
       c.appendChild(chip);
     });
   }
+  function updateAmount(){
+    $("f-amount").value = picked.size * TICKET_PRICE;
+  }
 
   grid.addEventListener("click", function(ev){
     var el = ev.target.closest(".pass"); if (!el) return;
@@ -485,16 +499,16 @@
     if (!isAdmin) return;
     if (b && (!editingId || b.id !== editingId)){ openDetail(b.id); return; }
     if (picked.has(n)) picked.delete(n); else picked.add(n);
-    syncPassInput(); render();
+    syncPassInput(); updateAmount(); render();
   });
 
   $("chips").addEventListener("click", function(ev){
     var chip = ev.target.closest("[data-drop]"); if (!chip) return;
-    picked.delete(+chip.dataset.drop); syncPassInput(); render();
+    picked.delete(+chip.dataset.drop); syncPassInput(); updateAmount(); render();
   });
 
   $("f-passes").addEventListener("input", function(){
-    picked = new Set(parsePasses(this.value)); render();
+    picked = new Set(parsePasses(this.value)); updateAmount(); render();
   });
   function syncPassInput(){
     $("f-passes").value = Array.from(picked).sort(function(a, b){ return a - b; }).join(", ");
@@ -506,13 +520,12 @@
     if (!isAdmin) return;
     var name = $("f-name").value.trim();
     var mobile = $("f-mobile").value.replace(/\D/g, "");
-    var amount = $("f-amount").value === "" ? 0 : Number($("f-amount").value);
     var list = Array.from(picked).sort(function(a, b){ return a - b; });
+    var amount = list.length * TICKET_PRICE;
 
     if (!name) return say("Enter a name.", true);
     if (!list.length) return say("Pick at least one pass number.", true);
     if (mobile && mobile.length !== 10) return say("Mobile number must be 10 digits.", true);
-    if (amount < 0 || isNaN(amount)) return say("Enter a valid amount.", true);
 
     var map = byPass(), clash = list.filter(function(n){ return map[n] && map[n].id !== editingId; });
     if (clash.length) return say("Pass " + clash.join(", ") + " already booked.", true);
@@ -521,7 +534,7 @@
     var b = {
       id: editingId || ("b" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6)),
       name: name, passes: list, mobile: mobile, amount: amount,
-      status: $("f-status").value, note: $("f-note").value.trim(),
+      status: $("f-status").value, paymentMode: $("f-payment-mode").value, note: $("f-note").value.trim(),
       color: existing ? existing.color : nextColor(),
       created: existing ? existing.created : new Date().toISOString()
     };
@@ -541,8 +554,10 @@
 
   function resetForm(){
     editingId = null; picked = new Set();
-    ["f-name","f-passes","f-mobile","f-amount","f-note"].forEach(function(id){ $(id).value = ""; });
+    ["f-name","f-passes","f-mobile","f-note"].forEach(function(id){ $(id).value = ""; });
+    updateAmount();
     $("f-status").value = "paid";
+    $("f-payment-mode").value = "online";
     $("formTitle").textContent = "New booking";
     $("formHint").textContent = "Pick pass numbers on the board, or type them below (e.g. 7, 12, 20-22)";
     $("saveBtn").textContent = "Save booking";
@@ -579,6 +594,7 @@
     sheet.appendChild(kv("Mobile", b.mobile ? '<a href="tel:' + b.mobile + '">' + b.mobile + "</a>" : "—", true));
     sheet.appendChild(kv("Amount", money(b.amount)));
     sheet.appendChild(kv("Payment", b.status === "due" ? "Pending" : "Received"));
+    sheet.appendChild(kv("Payment mode", paymentModeLabel(b.paymentMode)));
     sheet.appendChild(kv("Per pass", money(Math.round((b.amount||0) / Math.max(1, count)))));
     if (b.note) sheet.appendChild(kv("Note", b.note));
 
@@ -616,10 +632,11 @@
     picked = new Set(b.passes || []);
     $("f-name").value = b.name || "";
     $("f-mobile").value = b.mobile || "";
-    $("f-amount").value = b.amount || 0;
     $("f-status").value = b.status || "paid";
+    $("f-payment-mode").value = b.paymentMode || "online";
     $("f-note").value = b.note || "";
     syncPassInput();
+    updateAmount();
     $("formTitle").textContent = "Editing " + b.name;
     $("formHint").textContent = "Tap the board to add or drop passes for this booking.";
     $("saveBtn").textContent = "Save changes";
@@ -634,10 +651,10 @@
   $("exportBtn").addEventListener("click", function(){
     if (!isAdmin) return;
     if (!bookings.length) return say("No bookings to export yet.", true);
-    var rows = [["Name","Passes","Mobile","Amount","Payment","Note"]];
+    var rows = [["Name","Passes","Mobile","Amount","Payment","Payment mode","Note"]];
     bookings.forEach(function(b){
       rows.push([b.name, (b.passes||[]).join(" "), b.mobile || "", b.amount || 0,
-                 b.status === "due" ? "Pending" : "Received", b.note || ""]);
+                 b.status === "due" ? "Pending" : "Received", paymentModeLabel(b.paymentMode), b.note || ""]);
     });
     var csv = rows.map(function(r){
       return r.map(function(c){ return '"' + String(c).replace(/"/g, '""') + '"'; }).join(",");
