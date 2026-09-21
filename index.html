@@ -55,12 +55,7 @@
   .sticks{width:54px;height:54px;flex:none}
   header.top h1{font-size:clamp(26px,5vw,38px);font-weight:800;letter-spacing:.2px}
   header.top p{margin:2px 0 0;color:var(--ink-dim);font-size:15px}
-  .top-actions{margin-left:auto;position:relative;z-index:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .event-countdown{position:relative;z-index:1;margin-left:auto;padding:7px 12px;border-radius:12px;
-    background:rgba(0,0,0,.18);border:1px solid var(--line);text-align:center;line-height:1.15}
-  .event-countdown span{display:block;color:var(--ink-dim);font-size:11px}
-  .event-countdown strong{display:block;color:var(--marigold);font-family:"Baloo 2",sans-serif;font-size:18px}
-  .book-now{background:var(--marigold);color:#2a1300;white-space:nowrap}
+  .top-actions{margin-left:auto;position:relative;z-index:1}
 
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0 22px}
   .stat{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
@@ -120,14 +115,6 @@
   .btn:focus-visible{outline:3px solid var(--marigold);outline-offset:2px}
   .msg{margin-top:10px;font-size:14px;min-height:20px;color:var(--marigold)}
   .msg.bad{color:#ff9db8}
-  .upi-pay{margin-top:14px;padding:13px;border:1px solid rgba(25,198,178,.42);border-radius:14px;background:rgba(25,198,178,.08)}
-  .upi-pay h3{font-size:17px;margin:0 0 2px;color:var(--teal)}
-  .upi-pay p{margin:2px 0 10px;color:var(--ink-dim);font-size:13px}
-  .upi-details{display:flex;align-items:center;gap:12px}
-  .upi-qr{width:92px;height:92px;background:#fff;border-radius:8px;padding:4px;display:none}
-  .upi-qr.ready{display:block}
-  .upi-pay .btn{flex:1;text-align:center;text-decoration:none;background:var(--teal);color:#062620;display:block}
-  .upi-pay .btn[aria-disabled=true]{opacity:.5;pointer-events:none}
 
   .list{margin-top:22px}
   .list h2{font-size:20px;margin-bottom:10px}
@@ -139,8 +126,6 @@
   .tag{font-size:11px;padding:1px 8px;border-radius:999px;font-family:"Mukta",sans-serif;font-weight:700}
   .tag.paid{background:rgba(25,198,178,.2);color:var(--teal)}
   .tag.due{background:rgba(255,178,35,.2);color:var(--marigold)}
-  .tag.request{background:rgba(124,92,255,.24);color:#d4c6ff}
-  .tag.rejected{background:rgba(240,36,107,.18);color:#ffb9cf}
   .empty{color:var(--ink-dim);font-size:14px;padding:14px;border:1px dashed var(--line);border-radius:var(--radius)}
 
   dialog{border:none;padding:0;background:transparent;max-width:min(96vw,460px);width:100%;color:var(--ink)}
@@ -175,14 +160,9 @@
     </svg>
     <div>
       <h1>Dandiya Ticket Register</h1>
-      <p id="modeText">Tickets 1 to 100 — booked tickets are shown by colour</p>
-    </div>
-    <div class="event-countdown" aria-live="polite">
-      <span>14 October</span>
-      <strong id="countdown">Loading...</strong>
+      <p id="modeText">Ticket 1 to 100 — booked tickets are shown by colour</p>
     </div>
     <div class="top-actions">
-      <button class="btn book-now" id="bookNow" type="button">Book now</button>
       <button class="btn btn-ghost" id="adminBtn" type="button">Admin login</button>
     </div>
   </header>
@@ -193,7 +173,7 @@
     <section class="board">
       <div class="board-head">
         <h2>Ticket board</h2>
-        <span class="hint" id="boardHint">Booked tickets are shown by colour.</span>
+        <span class="hint" id="boardHint">Booked Ticket are shown by colour.</span>
       </div>
       <div class="grid" id="grid"></div>
 
@@ -209,7 +189,7 @@
 
     <aside class="panel" id="bookingPanel" hidden>
       <h2 id="formTitle">New booking</h2>
-      <span class="hint" id="formHint">Pick ticket numbers on the board, or type them below (e.g. 7, 12, 20-22)</span>
+      <span class="hint" id="formHint">Pick Ticket numbers on the board, or type them below (e.g. 7, 12, 20-22)</span>
 
       <label for="f-name">Name</label>
       <input type="text" id="f-name" placeholder="e.g. Rohit Sharma" autocomplete="name">
@@ -217,7 +197,6 @@
       <label for="f-passes">Ticket numbers</label>
       <input type="text" id="f-passes" placeholder="7, 12, 20-22" inputmode="numeric">
       <div class="chips" id="chips"></div>
-      <button class="btn btn-ghost" id="checkPassesBtn" type="button" style="width:100%;margin-top:8px">OK — Check ticket availability</button>
 
       <div class="row2">
         <div>
@@ -226,36 +205,18 @@
         </div>
         <div>
           <label for="f-amount">Amount (Rs)</label>
-          <input type="number" id="f-amount" value="0" min="0" step="1" readonly aria-describedby="amountHint">
-          <span class="hint" id="amountHint">&#8377;250 per ticket — auto-calculated</span>
+          <input type="number" id="f-amount" placeholder="0" min="0" step="1">
         </div>
       </div>
 
-      <div id="adminPaymentFields">
-        <label for="f-status">Payment</label>
-        <select id="f-status">
-          <option value="paid">Received</option>
-          <option value="due">Pending</option>
-        </select>
-
-        <label for="f-payment-mode">Payment mode</label>
-        <select id="f-payment-mode">
-          <option value="online">Online</option>
-          <option value="offline">Offline</option>
-        </select>
-      </div>
-
-      <section class="upi-pay" id="upiPayment" aria-labelledby="upiTitle">
-        <h3 id="upiTitle">Pay by UPI</h3>
-        <p id="upiPaymentText">Select ticket numbers to generate your payment.</p>
-        <div class="upi-details">
-          <img class="upi-qr" id="upiQr" alt="UPI payment QR code">
-          <a class="btn" id="upiPayLink" href="#" aria-disabled="true">Pay ₹0 by UPI</a>
-        </div>
-      </section>
+      <label for="f-status">Scan the QR to pay</label>
+      <select id="f-status">
+        <option value="paid">Received</option>
+        <option value="due">Pending</option>
+      </select>
 
       <label for="f-note">Note (optional)</label>
-      <textarea id="f-note" placeholder="e.g. group leader, kids' tickets"></textarea>
+      <textarea id="f-note" placeholder="e.g. group leader, kids' passes"></textarea>
 
       <button class="btn btn-main" id="saveBtn">Save booking</button>
       <button class="btn btn-ghost" id="cancelEdit" style="width:100%;margin-top:8px;display:none">Cancel edit</button>
@@ -293,39 +254,26 @@
 (function(){
   "use strict";
   var TOTAL = 100;
-  var TICKET_PRICE = 250;
-  var UPI_ID = "amitbiraj2004@okicici";
-  var UPI_NAME = "Dandiya Ticket";
   var LS = "dandiya_pass_register_v1";
   var FIREBASE_CONFIG = {
-    apiKey: "",
-    authDomain: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: ""
+    apiKey: "AIzaSyAl95M90CanRQCA6Tsc7PihGcCWAMYZ7bU",
+  authDomain: "dandiya-93c98.firebaseapp.com",
+  projectId: "dandiya-93c98",
+  storageBucket: "dandiya-93c98.firebasestorage.app",
+  messagingSenderId: "680481977297",
+  appId: "1:680481977297:web:b4fce04347f9608c3c66f0",
   };
   var PALETTE = ["#FFB223","#F0246B","#19C6B2","#7C5CFF","#FF7A3D","#4DD07A","#FF4FA3","#3FA9F5",
                  "#E8D44D","#C77DFF","#FF6B6B","#2ED9C3","#F79D65","#9BE564","#FF9FB2","#5AC8FA"];
 
   var bookings = [];
   var picked = new Set();
-  var checkedPassKey = "";
   var editingId = null;
   var isAdmin = false;
   var dbNS = null, firebaseAuth = null, migrated = false;
 
   var $ = function(id){ return document.getElementById(id); };
   var grid = $("grid"), listEl = $("list"), dlg = $("dlg"), sheet = $("sheet"), loginDlg = $("loginDlg");
-
-  function updateCountdown(){
-    var now = new Date();
-    var eventDate = new Date(now.getFullYear(), 9, 14);
-    if (now > new Date(now.getFullYear(), 9, 14, 23, 59, 59)) eventDate.setFullYear(eventDate.getFullYear() + 1);
-    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var days = Math.round((eventDate - today) / 86400000);
-    $("countdown").textContent = days === 0 ? "Dandiya is today!" : days + " days left";
-  }
 
   function localRead(){ try { return JSON.parse(localStorage.getItem(LS) || "[]"); } catch(e){ return []; } }
   function localWrite(v){ try { localStorage.setItem(LS, JSON.stringify(v)); } catch(e){} }
@@ -414,12 +362,8 @@
 
   function byPass(){
     var m = {};
-    bookings.filter(isApproved).forEach(function(b){ (b.passes||[]).forEach(function(n){ m[n] = b; }); });
+    bookings.forEach(function(b){ (b.passes||[]).forEach(function(n){ m[n] = b; }); });
     return m;
-  }
-  function isApproved(b){ return b.approval !== "pending" && b.approval !== "rejected"; }
-  function approvalLabel(b){
-    return b.approval === "pending" ? "Awaiting approval" : b.approval === "rejected" ? "Rejected" : "Approved";
   }
   function nextColor(){
     var used = {};
@@ -457,51 +401,34 @@
       el.dataset.n = n;
       if (b){
         el.style.background = b.color;
-        el.setAttribute("aria-label", "Ticket " + n + " — booked");
+        el.setAttribute("aria-label", "Pass " + n + " — booked");
         el.innerHTML = '<span>' + n + '</span>';
         if (isAdmin){
           el.innerHTML += '<span class="who"></span>';
           el.lastChild.textContent = short(b.name);
         }
       } else {
-        el.setAttribute("aria-label", "Ticket " + n + " — free");
+        el.setAttribute("aria-label", "Pass " + n + " — free");
         el.textContent = n;
       }
       grid.appendChild(el);
     }
 
-    var approved = bookings.filter(isApproved);
-    var requested = bookings.filter(function(b){ return b.approval === "pending"; });
     var takenCount = Object.keys(map).length;
     var paid = 0, due = 0;
-    approved.forEach(function(b){ if (b.status === "due") due += Number(b.amount||0); else paid += Number(b.amount||0); });
+    bookings.forEach(function(b){ if (b.status === "due") due += Number(b.amount||0); else paid += Number(b.amount||0); });
     $("stats").innerHTML =
-      stat("gold", takenCount, "tickets booked") +
+      stat("gold", takenCount, "passes booked") +
       stat("teal", TOTAL - takenCount, "still free") +
-      (isAdmin ? stat("", approved.length, "approved bookings") +
-      stat("rani", requested.length, "approval requests") +
+      (isAdmin ? stat("", bookings.length, "bookings") +
       stat("teal", money(paid), "collected") +
       stat("rani", money(due), "pending") : "");
 
     $("bookingList").hidden = !isAdmin;
-    $("bookingPanel").hidden = false;
-    $("adminPaymentFields").hidden = !isAdmin;
-    $("checkPassesBtn").hidden = isAdmin;
-    $("modeText").textContent = isAdmin ? "Admin mode — manage all bookings" : "Tickets 1 to 100 — booked tickets are shown by colour";
-    $("boardHint").textContent = isAdmin ? "Tap a booked number for details, or use the form to add and edit bookings." : "Booked tickets are shown by colour.";
+    $("bookingPanel").hidden = !isAdmin;
+    $("modeText").textContent = isAdmin ? "Admin mode — manage all bookings" : "Passes 1 to 100 — booked passes are shown by colour";
+    $("boardHint").textContent = isAdmin ? "Tap a booked number for details, or use the form to add and edit bookings." : "Booked passes are shown by colour.";
     $("adminBtn").textContent = isAdmin ? "Logout" : "Admin login";
-    if (isAdmin) $("modeText").textContent = "Admin mode — approve and manage booking requests";
-    if (!isAdmin){
-      $("modeText").textContent = "Choose free tickets and send your booking request";
-      $("boardHint").textContent = "Tap free ticket numbers to request them. They are confirmed after admin approval.";
-    }
-
-    if (!editingId){
-      $("formTitle").textContent = isAdmin ? "New booking" : "Book your tickets";
-      $("formHint").textContent = isAdmin ? "Pick ticket numbers on the board, or type them below (e.g. 7, 12, 20-22)" : "Select up to 5 free tickets, enter your details, and send an approval request.";
-      $("saveBtn").textContent = isAdmin ? "Save booking" : "Send booking request";
-    }
-    renderChips();
 
     if (!isAdmin) return;
 
@@ -527,12 +454,11 @@
       var mid = document.createElement("div");
       var nm = document.createElement("div"); nm.className = "nm"; nm.textContent = b.name;
       var sub = document.createElement("div"); sub.className = "sub";
-      sub.textContent = "Ticket " + (b.passes||[]).join(", ") + (b.mobile ? " • " + b.mobile : "");
+      sub.textContent = "Pass " + (b.passes||[]).join(", ") + (b.mobile ? " • " + b.mobile : "");
       mid.appendChild(nm); mid.appendChild(sub);
       var amt = document.createElement("div"); amt.className = "amt";
-      var tagClass = b.approval === "pending" ? "request" : b.approval === "rejected" ? "rejected" : (b.status === "due" ? "due" : "paid");
-      var tagText = b.approval === "pending" ? "Awaiting approval" : b.approval === "rejected" ? "Rejected" : (b.status === "due" ? "Pending" : "Received") + " · " + paymentModeLabel(b.paymentMode);
-      amt.innerHTML = money(b.amount) + '<br><span class="tag ' + tagClass + '">' + tagText + "</span>";
+      amt.innerHTML = money(b.amount) + '<br><span class="tag ' + (b.status === "due" ? "due" : "paid") + '">' +
+        (b.status === "due" ? "Pending" : "Received") + "</span>";
       row.appendChild(dot); row.appendChild(mid); row.appendChild(amt);
       listEl.appendChild(row);
     });
@@ -542,117 +468,65 @@
   function stat(cls, val, label){
     return '<div class="stat ' + cls + '"><b>' + val + "</b><span>" + label + "</span></div>";
   }
-  function paymentModeLabel(mode){
-    return mode === "offline" ? "Offline" : mode === "upi" ? "UPI" : mode === "online" ? "Online" : "Not selected";
-  }
   function renderChips(){
     var c = $("chips"); c.innerHTML = "";
     Array.from(picked).sort(function(a, b){ return a - b; }).forEach(function(n){
       var chip = document.createElement("button");
       chip.type = "button"; chip.className = "chip"; chip.dataset.drop = n;
       chip.innerHTML = n + " <small>&#10005;</small>";
-      chip.title = "Remove ticket " + n;
+      chip.title = "Remove pass " + n;
       c.appendChild(chip);
     });
-  }
-  function updateAmount(){
-    var amount = picked.size * TICKET_PRICE;
-    $("f-amount").value = amount;
-    updateUpiPayment(amount);
-  }
-  function selectedPassKey(list){ return list.slice().sort(function(a, b){ return a - b; }).join(","); }
-  function updateUpiPayment(amount){
-    var link = $("upiPayLink"), text = $("upiPaymentText"), qr = $("upiQr");
-    var passes = Array.from(picked).sort(function(a, b){ return a - b; });
-    if (!amount){
-      text.textContent = "Select ticket numbers to generate your payment.";
-      link.textContent = "Pay ₹0 by UPI";
-      link.href = "#";
-      link.setAttribute("aria-disabled", "true");
-      qr.removeAttribute("src"); qr.classList.remove("ready");
-      return;
-    }
-    var note = "Dandiya ticket " + passes.join(", ");
-    var upiUrl = "upi://pay?pa=" + encodeURIComponent(UPI_ID) + "&pn=" + encodeURIComponent(UPI_NAME) + "&am=" + encodeURIComponent(amount) + "&cu=INR&tn=" + encodeURIComponent(note);
-    text.textContent = "₹" + amount.toLocaleString("en-IN") + " will be paid to " + UPI_ID + ".";
-    link.textContent = "Pay ₹" + amount.toLocaleString("en-IN") + " by UPI";
-    link.href = upiUrl;
-    link.removeAttribute("aria-disabled");
-    qr.src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(upiUrl);
-    qr.classList.add("ready");
   }
 
   grid.addEventListener("click", function(ev){
     var el = ev.target.closest(".pass"); if (!el) return;
     var n = +el.dataset.n, map = byPass(), b = map[n];
-    if (b){
-      if (!isAdmin) return;
-      if (!editingId || b.id !== editingId){ openDetail(b.id); return; }
-    }
+    if (!isAdmin) return;
+    if (b && (!editingId || b.id !== editingId)){ openDetail(b.id); return; }
     if (picked.has(n)) picked.delete(n); else picked.add(n);
-    checkedPassKey = "";
-    syncPassInput(); updateAmount(); render();
+    syncPassInput(); render();
   });
 
   $("chips").addEventListener("click", function(ev){
     var chip = ev.target.closest("[data-drop]"); if (!chip) return;
-    picked.delete(+chip.dataset.drop); checkedPassKey = ""; syncPassInput(); updateAmount(); render();
+    picked.delete(+chip.dataset.drop); syncPassInput(); render();
   });
 
   $("f-passes").addEventListener("input", function(){
-    picked = new Set(parsePasses(this.value));
-    checkedPassKey = "";
-    updateAmount(); render();
+    picked = new Set(parsePasses(this.value)); render();
   });
   function syncPassInput(){
     $("f-passes").value = Array.from(picked).sort(function(a, b){ return a - b; }).join(", ");
   }
 
-  $("checkPassesBtn").addEventListener("click", function(){
-    var selected = Array.from(picked).sort(function(a, b){ return a - b; });
-    if (!selected.length) return say("Pick at least one ticket number first.", true);
-    if (selected.length > 5) return say("One person can book a maximum of 5 tickets at a time.", true);
-    var map = byPass();
-    var sold = selected.filter(function(n){ return map[n]; });
-    if (sold.length){
-      checkedPassKey = "";
-      alert("Ticket " + sold.join(", ") + " is already sold. Please select a different ticket.");
-      return say("Please select different ticket numbers and check again.", true);
-    }
-    checkedPassKey = selectedPassKey(selected);
-    say("Tickets " + selected.join(", ") + " are available. You can now send your booking request.");
-  });
-
   $("search").addEventListener("input", render);
 
   $("saveBtn").addEventListener("click", function(){
+    if (!isAdmin) return;
     var name = $("f-name").value.trim();
     var mobile = $("f-mobile").value.replace(/\D/g, "");
+    var amount = $("f-amount").value === "" ? 0 : Number($("f-amount").value);
     var list = Array.from(picked).sort(function(a, b){ return a - b; });
-    var amount = list.length * TICKET_PRICE;
 
     if (!name) return say("Enter a name.", true);
-    if (!list.length) return say("Pick at least one ticket number.", true);
-    if (!isAdmin && list.length > 5) return say("One person can book a maximum of 5 tickets at a time.", true);
-    if (!isAdmin && checkedPassKey !== selectedPassKey(list)) return say("Click OK — Check ticket availability before sending the request.", true);
+    if (!list.length) return say("Pick at least one pass number.", true);
     if (mobile && mobile.length !== 10) return say("Mobile number must be 10 digits.", true);
+    if (amount < 0 || isNaN(amount)) return say("Enter a valid amount.", true);
 
     var map = byPass(), clash = list.filter(function(n){ return map[n] && map[n].id !== editingId; });
-    if (clash.length) return say("Ticket " + clash.join(", ") + " is already sold. Please select a different ticket.", true);
+    if (clash.length) return say("Pass " + clash.join(", ") + " already booked.", true);
 
     var existing = editingId ? bookings.find(function(x){ return x.id === editingId; }) : null;
     var b = {
       id: editingId || ("b" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6)),
       name: name, passes: list, mobile: mobile, amount: amount,
-      status: isAdmin ? $("f-status").value : "due",
-      paymentMode: isAdmin ? $("f-payment-mode").value : "upi",
-      approval: existing ? existing.approval : (isAdmin ? "approved" : "pending"),
-      note: $("f-note").value.trim(),
+      status: $("f-status").value, note: $("f-note").value.trim(),
       color: existing ? existing.color : nextColor(),
       created: existing ? existing.created : new Date().toISOString()
     };
     save(b).then(function(){
-      say(editingId ? "Booking updated." : (isAdmin ? "Saved booking for " + name + "." : "Booking request sent. Admin approval ke baad tickets confirm honge."));
+      say(editingId ? "Booking updated." : "Saved booking for " + name + ".");
       resetForm();
       setTimeout(function(){
         list.forEach(function(n){
@@ -666,13 +540,11 @@
   $("cancelEdit").addEventListener("click", function(){ resetForm(); say(""); });
 
   function resetForm(){
-    editingId = null; picked = new Set(); checkedPassKey = "";
-    ["f-name","f-passes","f-mobile","f-note"].forEach(function(id){ $(id).value = ""; });
-    updateAmount();
+    editingId = null; picked = new Set();
+    ["f-name","f-passes","f-mobile","f-amount","f-note"].forEach(function(id){ $(id).value = ""; });
     $("f-status").value = "paid";
-    $("f-payment-mode").value = "online";
     $("formTitle").textContent = "New booking";
-    $("formHint").textContent = "Pick ticket numbers on the board, or type them below (e.g. 7, 12, 20-22)";
+    $("formHint").textContent = "Pick pass numbers on the board, or type them below (e.g. 7, 12, 20-22)";
     $("saveBtn").textContent = "Save booking";
     $("cancelEdit").style.display = "none";
     render();
@@ -706,17 +578,12 @@
 
     sheet.appendChild(kv("Mobile", b.mobile ? '<a href="tel:' + b.mobile + '">' + b.mobile + "</a>" : "—", true));
     sheet.appendChild(kv("Amount", money(b.amount)));
-    sheet.appendChild(kv("Approval", approvalLabel(b)));
     sheet.appendChild(kv("Payment", b.status === "due" ? "Pending" : "Received"));
-    sheet.appendChild(kv("Payment mode", paymentModeLabel(b.paymentMode)));
     sheet.appendChild(kv("Per pass", money(Math.round((b.amount||0) / Math.max(1, count)))));
     if (b.note) sheet.appendChild(kv("Note", b.note));
 
     var act = document.createElement("div"); act.className = "sheet-actions";
-    act.innerHTML = b.approval === "pending" ?
-      '<button class="btn btn-main" data-act="approve">Approve</button>' +
-      '<button class="btn btn-danger" data-act="reject">Reject</button>' +
-      '<button class="btn btn-ghost" data-act="close">Close</button>' :
+    act.innerHTML =
       '<button class="btn btn-ghost" data-act="edit">Edit</button>' +
       '<button class="btn btn-danger" data-act="del">Delete</button>' +
       '<button class="btn btn-ghost" data-act="close">Close</button>';
@@ -727,15 +594,6 @@
       var which = a.dataset.act;
       if (which === "close") dlg.close();
       if (which === "edit"){ dlg.close(); startEdit(b.id); }
-      if (which === "approve"){
-        var map = byPass();
-        var clash = (b.passes||[]).filter(function(n){ return map[n] && map[n].id !== b.id; });
-        if (clash.length){ alert("Pass " + clash.join(", ") + " is already booked. This request cannot be approved."); return; }
-        save(Object.assign({}, b, { approval: "approved", color: b.color || nextColor() })).then(function(){ dlg.close(); say("Booking approved. Passes are now confirmed."); });
-      }
-      if (which === "reject"){
-        save(Object.assign({}, b, { approval: "rejected" })).then(function(){ dlg.close(); say("Booking request rejected."); });
-      }
       if (which === "del"){
         if (confirm("Delete booking for " + b.name + "? Pass " + (b.passes||[]).join(", ") + " will become free again.")){
           remove(b.id).then(function(){ dlg.close(); say("Booking deleted."); });
@@ -756,14 +614,12 @@
     var b = bookings.find(function(x){ return x.id === id; }); if (!b) return;
     editingId = id;
     picked = new Set(b.passes || []);
-    checkedPassKey = selectedPassKey(Array.from(picked));
     $("f-name").value = b.name || "";
     $("f-mobile").value = b.mobile || "";
+    $("f-amount").value = b.amount || 0;
     $("f-status").value = b.status || "paid";
-    $("f-payment-mode").value = b.paymentMode || "online";
     $("f-note").value = b.note || "";
     syncPassInput();
-    updateAmount();
     $("formTitle").textContent = "Editing " + b.name;
     $("formHint").textContent = "Tap the board to add or drop passes for this booking.";
     $("saveBtn").textContent = "Save changes";
@@ -778,10 +634,10 @@
   $("exportBtn").addEventListener("click", function(){
     if (!isAdmin) return;
     if (!bookings.length) return say("No bookings to export yet.", true);
-    var rows = [["Name","Passes","Mobile","Amount","Approval","Payment","Payment mode","Note"]];
+    var rows = [["Name","Passes","Mobile","Amount","Payment","Note"]];
     bookings.forEach(function(b){
       rows.push([b.name, (b.passes||[]).join(" "), b.mobile || "", b.amount || 0,
-                 approvalLabel(b), b.status === "due" ? "Pending" : "Received", paymentModeLabel(b.paymentMode), b.note || ""]);
+                 b.status === "due" ? "Pending" : "Received", b.note || ""]);
     });
     var csv = rows.map(function(r){
       return r.map(function(c){ return '"' + String(c).replace(/"/g, '""') + '"'; }).join(",");
@@ -812,11 +668,6 @@
     $("loginEmail").focus();
   });
 
-  $("bookNow").addEventListener("click", function(){
-    $("bookingPanel").scrollIntoView({ behavior: "smooth", block: "start" });
-    $("f-name").focus();
-  });
-
   $("loginCancel").addEventListener("click", function(){ loginDlg.close(); });
   $("loginForm").addEventListener("submit", function(ev){
     ev.preventDefault();
@@ -840,8 +691,6 @@
     }
   });
 
-  updateCountdown();
-  setInterval(updateCountdown, 60 * 60 * 1000);
   render();
 })();
 </script>
