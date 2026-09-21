@@ -276,6 +276,11 @@
   "use strict";
   var TOTAL = 100;
   var LS = "dandiya_pass_register_v1";
+  // These are the credentials used by the admin-login dialog. Keep this check
+  // independent of Firebase: Firebase is used for booking storage and may not
+  // have an Email/Password user configured for this site.
+  var ADMIN_EMAIL = "dandiya@gmail.com";
+  var ADMIN_PASSWORD = "bholenath";
   var FIREBASE_CONFIG = {
     apiKey: "AIzaSyAl95M90CanRQCA6Tsc7PihGcCWAMYZ7bU",
   authDomain: "dandiya-93c98.firebaseapp.com",
@@ -721,17 +726,9 @@
     ev.preventDefault();
     var email = $("loginEmail").value.trim().toLowerCase();
     var password = $("loginPassword").value;
-    if (firebaseAuth){
-      firebaseAuth.signInWithEmailAndPassword(email, password).then(function(){
-        isAdmin = email === "dandiya@gmail.com" && password === "bholenath";
-        if (!isAdmin) return firebaseAuth.signOut().then(function(){ throw new Error("admin"); });
-        loginDlg.close();
-        render();
-      }).catch(function(){
-        $("loginError").textContent = "Incorrect email or password, or Firebase user is not created yet.";
-      });
-    } else if (email === "dandiya@gmail.com" && password === "bholenath"){
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD){
       isAdmin = true;
+      $("loginError").textContent = "";
       loginDlg.close();
       render();
     } else {
