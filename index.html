@@ -352,7 +352,14 @@
     return Promise.resolve();
   }
   function remove(id){
-    if (dbNS) return dbNS.collection("bookings").doc(id).delete().catch(function(){});
+    if (dbNS){
+      return dbNS.collection("bookings").doc(id).delete().catch(function(e){
+        // Do not treat a rejected Firestore request as a successful deletion.
+        // The caller needs the error so it can keep the dialog open and tell
+        // the admin what happened.
+        throw e;
+      });
+    }
     bookings = bookings.filter(function(x){ return x.id !== id; });
     localWrite(bookings); render();
     return Promise.resolve();
@@ -644,7 +651,17 @@
       if (which === "edit"){ dlg.close(); startEdit(b.id); }
       if (which === "del"){
         if (confirm("Delete booking for " + b.name + "? Pass " + (b.passes||[]).join(", ") + " will become free again.")){
-          remove(b.id).then(function(){ dlg.close(); say("Booking deleted."); });
+          a.disabled = true;
+          a.textContent = "Deleting...";
+          remove(b.id).then(function(){
+            dlg.close();
+            say("Booking deleted. The pass is available again.");
+          }).catch(function(e){
+            a.disabled = false;
+            a.textContent = "Delete";
+            var code = e && e.code ? e.code : "error";
+            say("Could not delete this booking (" + code + "). Please try again.", true);
+          });
         }
       }
     });
@@ -727,10 +744,18 @@
     var email = $("loginEmail").value.trim().toLowerCase();
     var password = $("loginPassword").value;
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD){
-      isAdmin = true;
-      $("loginError").textContent = "";
-      loginDlg.close();
-      render();
+      // Sign in to Firebase too when this Email/Password user exists. This is
+      // needed by Firestore projects whose rules permit deletes only for an
+      // authenticated user, but a missing Firebase user must not block login.
+      var authAttempt = firebaseAuth
+        ? firebaseAuth.signInWithEmailAndPassword(email, password).catch(function(){ return null; })
+        : Promise.resolve();
+      authAttempt.then(function(){
+        isAdmin = true;
+        $("loginError").textContent = "";
+        loginDlg.close();
+        render();
+      });
     } else {
       $("loginError").textContent = "Incorrect email or password.";
     }
