@@ -163,6 +163,7 @@
       <p id="modeText">Ticket 1 to 100 — booked tickets are shown by colour</p>
     </div>
     <div class="top-actions">
+      <button class="btn btn-main" id="bookNowBtn" type="button">Book now</button>
       <button class="btn btn-ghost" id="adminBtn" type="button">Admin login</button>
     </div>
   </header>
@@ -425,12 +426,16 @@
       stat("rani", money(due), "pending") : "");
 
     $("bookingList").hidden = !isAdmin;
-    $("bookingPanel").hidden = !isAdmin;
+    $("bookingPanel").hidden = false;
     $("modeText").textContent = isAdmin ? "Admin mode — manage all bookings" : "Passes 1 to 100 — booked passes are shown by colour";
-    $("boardHint").textContent = isAdmin ? "Tap a booked number for details, or use the form to add and edit bookings." : "Booked passes are shown by colour.";
+    $("boardHint").textContent = isAdmin ? "Tap a booked number for details, or use the form to add and edit bookings." : "Tap a free ticket to select it, then fill in your details and book.";
     $("adminBtn").textContent = isAdmin ? "Logout" : "Admin login";
+    $("bookNowBtn").hidden = isAdmin;
 
-    if (!isAdmin) return;
+    if (!isAdmin) {
+      renderChips();
+      return;
+    }
 
     var q = ($("search").value || "").trim().toLowerCase();
     var shown = bookings.slice().sort(function(a, b){
@@ -482,7 +487,7 @@
   grid.addEventListener("click", function(ev){
     var el = ev.target.closest(".pass"); if (!el) return;
     var n = +el.dataset.n, map = byPass(), b = map[n];
-    if (!isAdmin) return;
+    if (b && !isAdmin){ say("This pass is already booked. Please choose another available one.", true); return; }
     if (b && (!editingId || b.id !== editingId)){ openDetail(b.id); return; }
     if (picked.has(n)) picked.delete(n); else picked.add(n);
     syncPassInput(); render();
@@ -503,7 +508,6 @@
   $("search").addEventListener("input", render);
 
   $("saveBtn").addEventListener("click", function(){
-    if (!isAdmin) return;
     var name = $("f-name").value.trim();
     var mobile = $("f-mobile").value.replace(/\D/g, "");
     var amount = $("f-amount").value === "" ? 0 : Number($("f-amount").value);
@@ -651,6 +655,11 @@
           .catch(function(){ say("Download cancelled.", true); });
       });
     } else { say("Downloads are not available here.", true); }
+  });
+
+  $("bookNowBtn").addEventListener("click", function(){
+    $("bookingPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+    $("f-name").focus();
   });
 
   $("adminBtn").addEventListener("click", function(){
