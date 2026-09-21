@@ -120,6 +120,14 @@
   .btn:focus-visible{outline:3px solid var(--marigold);outline-offset:2px}
   .msg{margin-top:10px;font-size:14px;min-height:20px;color:var(--marigold)}
   .msg.bad{color:#ff9db8}
+  .upi-pay{margin-top:14px;padding:13px;border:1px solid rgba(25,198,178,.42);border-radius:14px;background:rgba(25,198,178,.08)}
+  .upi-pay h3{font-size:17px;margin:0 0 2px;color:var(--teal)}
+  .upi-pay p{margin:2px 0 10px;color:var(--ink-dim);font-size:13px}
+  .upi-details{display:flex;align-items:center;gap:12px}
+  .upi-qr{width:92px;height:92px;background:#fff;border-radius:8px;padding:4px;display:none}
+  .upi-qr.ready{display:block}
+  .upi-pay .btn{flex:1;text-align:center;text-decoration:none;background:var(--teal);color:#062620;display:block}
+  .upi-pay .btn[aria-disabled=true]{opacity:.5;pointer-events:none}
 
   .list{margin-top:22px}
   .list h2{font-size:20px;margin-bottom:10px}
@@ -236,6 +244,15 @@
         </select>
       </div>
 
+      <section class="upi-pay" id="upiPayment" aria-labelledby="upiTitle">
+        <h3 id="upiTitle">Pay by UPI</h3>
+        <p id="upiPaymentText">Select pass numbers to generate your payment.</p>
+        <div class="upi-details">
+          <img class="upi-qr" id="upiQr" alt="UPI payment QR code">
+          <a class="btn" id="upiPayLink" href="#" aria-disabled="true">Pay ₹0 by UPI</a>
+        </div>
+      </section>
+
       <label for="f-note">Note (optional)</label>
       <textarea id="f-note" placeholder="e.g. group leader, kids' passes"></textarea>
 
@@ -276,6 +293,8 @@
   "use strict";
   var TOTAL = 100;
   var TICKET_PRICE = 250;
+  var UPI_ID = "amitbiraj2004@okicici";
+  var UPI_NAME = "Dandiya Pass";
   var LS = "dandiya_pass_register_v1";
   var FIREBASE_CONFIG = {
     apiKey: "",
@@ -476,7 +495,7 @@
 
     if (!editingId){
       $("formTitle").textContent = isAdmin ? "New booking" : "Book your passes";
-      $("formHint").textContent = isAdmin ? "Pick pass numbers on the board, or type them below (e.g. 7, 12, 20-22)" : "Select free pass numbers, enter your details, and send an approval request.";
+      $("formHint").textContent = isAdmin ? "Pick pass numbers on the board, or type them below (e.g. 7, 12, 20-22)" : "Select up to 5 free passes, enter your details, and send an approval request.";
       $("saveBtn").textContent = isAdmin ? "Save booking" : "Send booking request";
     }
     renderChips();
@@ -521,7 +540,7 @@
     return '<div class="stat ' + cls + '"><b>' + val + "</b><span>" + label + "</span></div>";
   }
   function paymentModeLabel(mode){
-    return mode === "offline" ? "Offline" : mode === "online" ? "Online" : "Not selected";
+    return mode === "offline" ? "Offline" : mode === "upi" ? "UPI" : mode === "online" ? "Online" : "Not selected";
   }
   function renderChips(){
     var c = $("chips"); c.innerHTML = "";
@@ -534,7 +553,29 @@
     });
   }
   function updateAmount(){
-    $("f-amount").value = picked.size * TICKET_PRICE;
+    var amount = picked.size * TICKET_PRICE;
+    $("f-amount").value = amount;
+    updateUpiPayment(amount);
+  }
+  function updateUpiPayment(amount){
+    var link = $("upiPayLink"), text = $("upiPaymentText"), qr = $("upiQr");
+    var passes = Array.from(picked).sort(function(a, b){ return a - b; });
+    if (!amount){
+      text.textContent = "Select pass numbers to generate your payment.";
+      link.textContent = "Pay ₹0 by UPI";
+      link.href = "#";
+      link.setAttribute("aria-disabled", "true");
+      qr.removeAttribute("src"); qr.classList.remove("ready");
+      return;
+    }
+    var note = "Dandiya pass " + passes.join(", ");
+    var upiUrl = "upi://pay?pa=" + encodeURIComponent(UPI_ID) + "&pn=" + encodeURIComponent(UPI_NAME) + "&am=" + encodeURIComponent(amount) + "&cu=INR&tn=" + encodeURIComponent(note);
+    text.textContent = "₹" + amount.toLocaleString("en-IN") + " will be paid to " + UPI_ID + ".";
+    link.textContent = "Pay ₹" + amount.toLocaleString("en-IN") + " by UPI";
+    link.href = upiUrl;
+    link.removeAttribute("aria-disabled");
+    qr.src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(upiUrl);
+    qr.classList.add("ready");
   }
 
   grid.addEventListener("click", function(ev){
@@ -570,6 +611,7 @@
 
     if (!name) return say("Enter a name.", true);
     if (!list.length) return say("Pick at least one pass number.", true);
+    if (!isAdmin && list.length > 5) return say("One person can book a maximum of 5 passes at a time.", true);
     if (mobile && mobile.length !== 10) return say("Mobile number must be 10 digits.", true);
 
     var map = byPass(), clash = list.filter(function(n){ return map[n] && map[n].id !== editingId; });
@@ -580,7 +622,7 @@
       id: editingId || ("b" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6)),
       name: name, passes: list, mobile: mobile, amount: amount,
       status: isAdmin ? $("f-status").value : "due",
-      paymentMode: isAdmin ? $("f-payment-mode").value : "",
+      paymentMode: isAdmin ? $("f-payment-mode").value : "upi",
       approval: existing ? existing.approval : (isAdmin ? "approved" : "pending"),
       note: $("f-note").value.trim(),
       color: existing ? existing.color : nextColor(),
