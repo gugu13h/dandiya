@@ -217,6 +217,7 @@
       <label for="f-passes">Pass numbers</label>
       <input type="text" id="f-passes" placeholder="7, 12, 20-22" inputmode="numeric">
       <div class="chips" id="chips"></div>
+      <button class="btn btn-ghost" id="checkPassesBtn" type="button" style="width:100%;margin-top:8px">OK — Check pass availability</button>
 
       <div class="row2">
         <div>
@@ -309,6 +310,7 @@
 
   var bookings = [];
   var picked = new Set();
+  var checkedPassKey = "";
   var editingId = null;
   var isAdmin = false;
   var dbNS = null, firebaseAuth = null, migrated = false;
@@ -484,6 +486,7 @@
     $("bookingList").hidden = !isAdmin;
     $("bookingPanel").hidden = false;
     $("adminPaymentFields").hidden = !isAdmin;
+    $("checkPassesBtn").hidden = isAdmin;
     $("modeText").textContent = isAdmin ? "Admin mode — manage all bookings" : "Passes 1 to 100 — booked passes are shown by colour";
     $("boardHint").textContent = isAdmin ? "Tap a booked number for details, or use the form to add and edit bookings." : "Booked passes are shown by colour.";
     $("adminBtn").textContent = isAdmin ? "Logout" : "Admin login";
@@ -557,6 +560,7 @@
     $("f-amount").value = amount;
     updateUpiPayment(amount);
   }
+  function selectedPassKey(list){ return list.slice().sort(function(a, b){ return a - b; }).join(","); }
   function updateUpiPayment(amount){
     var link = $("upiPayLink"), text = $("upiPaymentText"), qr = $("upiQr");
     var passes = Array.from(picked).sort(function(a, b){ return a - b; });
@@ -582,41 +586,42 @@
     var el = ev.target.closest(".pass"); if (!el) return;
     var n = +el.dataset.n, map = byPass(), b = map[n];
     if (b){
-      if (!isAdmin){
-        alert("Pass " + n + " is already sold. Please select a different ticket.");
-        return;
-      }
+      if (!isAdmin) return;
       if (!editingId || b.id !== editingId){ openDetail(b.id); return; }
     }
     if (picked.has(n)) picked.delete(n); else picked.add(n);
+    checkedPassKey = "";
     syncPassInput(); updateAmount(); render();
   });
 
   $("chips").addEventListener("click", function(ev){
     var chip = ev.target.closest("[data-drop]"); if (!chip) return;
-    picked.delete(+chip.dataset.drop); syncPassInput(); updateAmount(); render();
+    picked.delete(+chip.dataset.drop); checkedPassKey = ""; syncPassInput(); updateAmount(); render();
   });
 
   $("f-passes").addEventListener("input", function(){
-    var entered = parsePasses(this.value);
-    if (!isAdmin){
-      var map = byPass();
-      var sold = entered.filter(function(n){ return map[n]; });
-      if (sold.length){
-        picked = new Set(entered.filter(function(n){ return !map[n]; }));
-        syncPassInput();
-        alert("Pass " + sold.join(", ") + " is already sold. Please select a different ticket.");
-      } else {
-        picked = new Set(entered);
-      }
-    } else {
-      picked = new Set(entered);
-    }
+    picked = new Set(parsePasses(this.value));
+    checkedPassKey = "";
     updateAmount(); render();
   });
   function syncPassInput(){
     $("f-passes").value = Array.from(picked).sort(function(a, b){ return a - b; }).join(", ");
   }
+
+  $("checkPassesBtn").addEventListener("click", function(){
+    var selected = Array.from(picked).sort(function(a, b){ return a - b; });
+    if (!selected.length) return say("Pick at least one pass number first.", true);
+    if (selected.length > 5) return say("One person can book a maximum of 5 passes at a time.", true);
+    var map = byPass();
+    var sold = selected.filter(function(n){ return map[n]; });
+    if (sold.length){
+      checkedPassKey = "";
+      alert("Pass " + sold.join(", ") + " is already sold. Please select a different ticket.");
+      return say("Please select different ticket numbers and check again.", true);
+    }
+    checkedPassKey = selectedPassKey(selected);
+    say("Passes " + selected.join(", ") + " are available. You can now send your booking request.");
+  });
 
   $("search").addEventListener("input", render);
 
@@ -629,6 +634,7 @@
     if (!name) return say("Enter a name.", true);
     if (!list.length) return say("Pick at least one pass number.", true);
     if (!isAdmin && list.length > 5) return say("One person can book a maximum of 5 passes at a time.", true);
+    if (!isAdmin && checkedPassKey !== selectedPassKey(list)) return say("Click OK — Check pass availability before sending the request.", true);
     if (mobile && mobile.length !== 10) return say("Mobile number must be 10 digits.", true);
 
     var map = byPass(), clash = list.filter(function(n){ return map[n] && map[n].id !== editingId; });
@@ -660,7 +666,7 @@
   $("cancelEdit").addEventListener("click", function(){ resetForm(); say(""); });
 
   function resetForm(){
-    editingId = null; picked = new Set();
+    editingId = null; picked = new Set(); checkedPassKey = "";
     ["f-name","f-passes","f-mobile","f-note"].forEach(function(id){ $(id).value = ""; });
     updateAmount();
     $("f-status").value = "paid";
@@ -750,6 +756,7 @@
     var b = bookings.find(function(x){ return x.id === id; }); if (!b) return;
     editingId = id;
     picked = new Set(b.passes || []);
+    checkedPassKey = selectedPassKey(Array.from(picked));
     $("f-name").value = b.name || "";
     $("f-mobile").value = b.mobile || "";
     $("f-status").value = b.status || "paid";
