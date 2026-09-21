@@ -582,7 +582,10 @@
     var el = ev.target.closest(".pass"); if (!el) return;
     var n = +el.dataset.n, map = byPass(), b = map[n];
     if (b){
-      if (!isAdmin) return;
+      if (!isAdmin){
+        alert("Pass " + n + " is already sold. Please select a different ticket.");
+        return;
+      }
       if (!editingId || b.id !== editingId){ openDetail(b.id); return; }
     }
     if (picked.has(n)) picked.delete(n); else picked.add(n);
@@ -595,7 +598,21 @@
   });
 
   $("f-passes").addEventListener("input", function(){
-    picked = new Set(parsePasses(this.value)); updateAmount(); render();
+    var entered = parsePasses(this.value);
+    if (!isAdmin){
+      var map = byPass();
+      var sold = entered.filter(function(n){ return map[n]; });
+      if (sold.length){
+        picked = new Set(entered.filter(function(n){ return !map[n]; }));
+        syncPassInput();
+        alert("Pass " + sold.join(", ") + " is already sold. Please select a different ticket.");
+      } else {
+        picked = new Set(entered);
+      }
+    } else {
+      picked = new Set(entered);
+    }
+    updateAmount(); render();
   });
   function syncPassInput(){
     $("f-passes").value = Array.from(picked).sort(function(a, b){ return a - b; }).join(", ");
@@ -615,7 +632,7 @@
     if (mobile && mobile.length !== 10) return say("Mobile number must be 10 digits.", true);
 
     var map = byPass(), clash = list.filter(function(n){ return map[n] && map[n].id !== editingId; });
-    if (clash.length) return say("Pass " + clash.join(", ") + " already booked.", true);
+    if (clash.length) return say("Pass " + clash.join(", ") + " is already sold. Please select a different ticket.", true);
 
     var existing = editingId ? bookings.find(function(x){ return x.id === editingId; }) : null;
     var b = {
