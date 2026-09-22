@@ -225,8 +225,8 @@
           <input type="tel" id="f-mobile" placeholder="10 digits" inputmode="numeric" autocomplete="tel">
         </div>
         <div>
-          <label for="f-amount">Amount (Rs)</label>
-          <input type="number" id="f-amount" placeholder="0" min="0" step="1">
+          <label for="f-amount">Total amount (Rs)</label>
+          <input type="number" id="f-amount" placeholder="Auto: Rs 250 per ticket" min="0" step="1" readonly aria-describedby="priceHint">
         </div>
       </div>
 
@@ -235,6 +235,7 @@
         <option value="paid">Received</option>
         <option value="due">Pending</option>
       </select>
+      <span class="hint" id="priceHint">Ticket price: Rs 250 each</span>
 
       <label for="f-note">Note (optional)</label>
       <textarea id="f-note" placeholder="e.g. group leader, kids' passes"></textarea>
@@ -274,6 +275,7 @@
 (function(){
   "use strict";
   var TOTAL = 100;
+  var TICKET_PRICE = 250;
   var LS = "dandiya_pass_register_v1";
   var ADMIN_EMAIL = "dandiya@gmail.com";
   // Local fallback is used only when this Firebase project's Auth service is unavailable.
@@ -549,11 +551,17 @@
 
   $("f-passes").addEventListener("input", function(){
     picked = new Set(parsePasses(this.value));
+    updateAmount();
     render();
   });
 
   function syncPassInput(){
     $("f-passes").value = Array.from(picked).sort(function(a, b){ return a - b; }).join(", ");
+    updateAmount();
+  }
+
+  function updateAmount(){
+    $("f-amount").value = picked.size ? picked.size * TICKET_PRICE : "";
   }
 
   $("search").addEventListener("input", render);
@@ -561,14 +569,12 @@
   $("saveBtn").addEventListener("click", function(){
     var name = $("f-name").value.trim();
     var mobile = $("f-mobile").value.replace(/\D/g, "");
-    var amount = $("f-amount").value === "" ? 0 : Number($("f-amount").value);
     var list = Array.from(picked).sort(function(a, b){ return a - b; });
+    var amount = list.length * TICKET_PRICE;
 
     if (!name) return say("Enter a name.", true);
     if (!list.length) return say("Pick at least one pass number.", true);
     if (mobile && mobile.length !== 10) return say("Mobile number must be 10 digits.", true);
-    if (amount < 0 || isNaN(amount)) return say("Enter a valid amount.", true);
-
     var map = byPass(), clash = list.filter(function(n){ return map[n] && map[n].id !== editingId; });
     if (clash.length) return say("Pass " + clash.join(", ") + " already booked.", true);
 
@@ -694,7 +700,7 @@
     picked = new Set(b.passes || []);
     $("f-name").value = b.name || "";
     $("f-mobile").value = b.mobile || "";
-    $("f-amount").value = b.amount || 0;
+    $("f-amount").value = (b.passes || []).length * TICKET_PRICE;
     $("f-status").value = b.status || "paid";
     $("f-note").value = b.note || "";
     syncPassInput();
