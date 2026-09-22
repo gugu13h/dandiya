@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /bookings/{bookingId} {
+      // Visitors can see availability and make a new booking.
+      allow read, create: if true;
+
+      // Only the actual Firebase account for the administrator can edit or
+      // delete a booking. Do not rely on a password hard-coded in the page.
+      allow update, delete: if request.auth != null
+        && request.auth.token.email == 'dandiya@gmail.com';
+    }
+  }
+}

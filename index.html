@@ -107,14 +107,6 @@
     display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer;font-family:"Baloo 2",sans-serif}
   .chip small{opacity:.7;font-size:14px}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .upi-box{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.04)}
-  .upi-box h3{font-size:18px;margin-bottom:8px}
-  .upi-card{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .upi-qr{width:120px;height:120px;padding:8px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.20)}
-  .upi-qr img{width:100%;height:100%;object-fit:contain}
-  .upi-meta{flex:1;min-width:140px}
-  .upi-meta p{margin:4px 0;color:var(--ink-dim);font-size:13px}
-  .upi-meta strong{color:var(--ink)}
   .btn{border:none;border-radius:12px;padding:12px 16px;font-family:"Baloo 2",sans-serif;font-weight:700;font-size:16px;cursor:pointer}
   .btn-main{background:var(--rani);color:#fff;width:100%;margin-top:14px}
   .btn-main:hover{filter:brightness(1.08)}
@@ -218,19 +210,7 @@
         </div>
       </div>
 
-      <div class="upi-box" aria-live="polite">
-        <h3>UPI QR payment</h3>
-        <div class="upi-card">
-          <div class="upi-qr"><img id="upiQr" alt="UPI QR code" src=""></div>
-          <div class="upi-meta">
-            <p>UPI ID: <strong>amitbiraj2004@okicici</strong></p>
-            <p>Amount: <strong id="upiAmount">Rs 0</strong></p>
-            <p>Per ticket: <strong>Rs 250</strong></p>
-          </div>
-        </div>
-      </div>
-
-      <label for="f-status">Scan the QR to pay</label>
+      <label for="f-status">Payment status</label>
       <select id="f-status">
         <option value="paid">Received</option>
         <option value="due">Pending</option>
@@ -276,11 +256,9 @@
   "use strict";
   var TOTAL = 100;
   var LS = "dandiya_pass_register_v1";
-  // These are the credentials used by the admin-login dialog. Keep this check
-  // independent of Firebase: Firebase is used for booking storage and may not
-  // have an Email/Password user configured for this site.
+  // The password is verified only by Firebase Authentication. Never keep an
+  // administrator password in this public browser file.
   var ADMIN_EMAIL = "dandiya@gmail.com";
-  var ADMIN_PASSWORD = "bholenath";
   var FIREBASE_CONFIG = {
     apiKey: "AIzaSyAl95M90CanRQCA6Tsc7PihGcCWAMYZ7bU",
   authDomain: "dandiya-93c98.firebaseapp.com",
@@ -296,7 +274,8 @@
   var picked = new Set();
   var editingId = null;
   var isAdmin = false;
-  var dbNS = null, firebaseAuth = null, migrated = false;
+  var dbNS = null, firebaseAuth = null;
+  var cloudReady = false;
 
   var $ = function(id){ return document.getElementById(id); };
   var grid = $("grid"), listEl = $("list"), dlg = $("dlg"), sheet = $("sheet"), loginDlg = $("loginDlg");
@@ -316,22 +295,15 @@
       dbNS = firebase.firestore();
       dbNS.collection("bookings").onSnapshot(function(snap){
         var fromDb = snap.docs.map(function(d){ return Object.assign({ id: d.id }, d.data()); });
-        if (!migrated){
-          migrated = true;
-          var have = {}; fromDb.forEach(function(b){ have[b.id] = 1; });
-          var pending = localRead().filter(function(b){ return !have[b.id]; });
-          if (pending.length){
-            pending.reduce(function(p, b){
-              return p.then(function(){
-                var d = Object.assign({}, b); delete d.id;
-                return dbNS.collection("bookings").doc(b.id).set(d);
-              });
-            }, Promise.resolve()).then(function(){ localWrite([]); }).catch(function(){});
-          } else { localWrite([]); }
-        }
-        bookings = fromDb; render();
-      }, function(){
-        say("Firestore could not be reached. Local data is being used.", true);
+        // Firestore is the single source of truth. Keeping its latest snapshot
+        // as a cache makes every device show the same data once it is online.
+        cloudReady = !snap.metadata.fromCache;
+        bookings = fromDb;
+        localWrite(fromDb);
+        render();
+      }, function(e){
+        cloudReady = false;
+        say("Cloud data could not be reached (" + (e && e.code ? e.code : "error") + "). Changes are paused so data does not split between devices.", true);
       });
     } catch(e){
       dbNS = null;
@@ -341,9 +313,29 @@
 
   function save(b){
     if (dbNS){
+      if (!cloudReady){
+        var offlineError = new Error("Waiting for the shared booking data.");
+        offlineError.code = "cloud-not-ready";
+        return Promise.reject(offlineError);
+      }
       var d = Object.assign({}, b); delete d.id;
-      return dbNS.collection("bookings").doc(b.id).set(d).catch(function(e){
-        say("Could not save (" + (e && e.code ? e.code : "error") + "). Try again.", true);
+      // The transaction re-checks availability immediately before writing.
+      // Two devices therefore cannot successfully book the same pass.
+      return dbNS.runTransaction(function(tx){
+        return tx.get(dbNS.collection("bookings")).then(function(snap){
+          var clash = null;
+          snap.forEach(function(doc){
+            if (doc.id === b.id) return;
+            var other = doc.data();
+            if ((other.passes || []).some(function(n){ return b.passes.indexOf(Number(n)) !== -1; })) clash = doc.id;
+          });
+          if (clash){
+            var err = new Error("One or more passes were just booked on another device.");
+            err.code = "pass-already-booked";
+            throw err;
+          }
+          tx.set(dbNS.collection("bookings").doc(b.id), d);
+        });
       });
     }
     var i = bookings.findIndex(function(x){ return x.id === b.id; });
@@ -353,6 +345,11 @@
   }
   function remove(id){
     if (dbNS){
+      if (!cloudReady){
+        var offlineError = new Error("Waiting for the shared booking data.");
+        offlineError.code = "cloud-not-ready";
+        return Promise.reject(offlineError);
+      }
       return dbNS.collection("bookings").doc(id).delete().catch(function(e){
         // Do not treat a rejected Firestore request as a successful deletion.
         // The caller needs the error so it can keep the dialog open and tell
@@ -375,21 +372,14 @@
       dbNS = ns;
       ns.collection("bookings").onSnapshot(function(snap){
         var fromDb = snap.docs.map(function(d){ return Object.assign({ id: d.id }, d.data()); });
-        if (!migrated){
-          migrated = true;
-          var have = {}; fromDb.forEach(function(b){ have[b.id] = 1; });
-          var pending = localRead().filter(function(b){ return !have[b.id]; });
-          if (pending.length){
-            pending.reduce(function(p, b){
-              return p.then(function(){
-                var d = Object.assign({}, b); delete d.id;
-                return ns.collection("bookings").doc(b.id).set(d);
-              });
-            }, Promise.resolve()).then(function(){ localWrite([]); }).catch(function(){});
-          } else { localWrite([]); }
-        }
-        bookings = fromDb; render();
-      }, function(){});
+        cloudReady = !snap.metadata.fromCache;
+        bookings = fromDb;
+        localWrite(fromDb);
+        render();
+      }, function(e){
+        cloudReady = false;
+        say("Cloud data could not be reached (" + (e && e.code ? e.code : "error") + "). Changes are paused so data does not split between devices.", true);
+      });
     }).catch(function(){});
   }
 
@@ -420,20 +410,6 @@
   }
   function short(name){ return String(name||"").trim().split(/\s+/)[0] || ""; }
   function money(n){ return "Rs " + Number(n||0).toLocaleString("en-IN"); }
-  function buildUpiLink(amount){
-    var total = Number(amount || 0);
-    var upi = "upi://pay?pa=amitbiraj2004@okicici&pn=Dandiya%20Booking&am=" + total.toFixed(2) + "&cu=INR&tn=" + encodeURIComponent("Dandiya Ticket Booking");
-    return upi;
-  }
-  function renderUpiQr(){
-    var amount = Number($("f-amount").value || 0);
-    if (!Number.isFinite(amount) || amount < 0) amount = 0;
-    if (picked.size && amount === 0) amount = picked.size * 250;
-    $("f-amount").value = amount;
-    $("upiAmount").textContent = money(amount);
-    var qrData = encodeURIComponent(buildUpiLink(amount));
-    $("upiQr").src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + qrData + "&format=png";
-  }
   function say(t, bad){ var m = $("msg"); m.textContent = t || ""; m.className = "msg" + (bad ? " bad" : ""); }
 
   function render(){
@@ -482,8 +458,6 @@
       renderChips();
       return;
     }
-
-    renderUpiQr();
 
     var q = ($("search").value || "").trim().toLowerCase();
     var shown = bookings.slice().sort(function(a, b){
@@ -548,12 +522,10 @@
 
   $("f-passes").addEventListener("input", function(){
     picked = new Set(parsePasses(this.value));
-    $("f-amount").value = picked.size ? picked.size * 250 : "";
     render();
   });
   function syncPassInput(){
     $("f-passes").value = Array.from(picked).sort(function(a, b){ return a - b; }).join(", ");
-    $("f-amount").value = picked.size ? picked.size * 250 : "";
   }
 
   $("search").addEventListener("input", render);
@@ -580,6 +552,9 @@
       color: existing ? existing.color : nextColor(),
       created: existing ? existing.created : new Date().toISOString()
     };
+    var saveButton = $("saveBtn");
+    saveButton.disabled = true;
+    saveButton.textContent = "Saving...";
     save(b).then(function(){
       say(editingId ? "Booking updated." : "Saved booking for " + name + ".");
       resetForm();
@@ -589,6 +564,15 @@
           if (el) { el.classList.add("flash"); setTimeout(function(){ el.classList.remove("flash"); }, 2400); }
         });
       }, 60);
+    }).catch(function(e){
+      var code = e && e.code ? e.code : "error";
+      var message = code === "pass-already-booked"
+        ? "One or more selected passes have just been booked on another device. Please choose available passes."
+        : "Could not save (" + code + "). No booking was changed.";
+      say(message, true);
+    }).then(function(){
+      saveButton.disabled = false;
+      saveButton.textContent = editingId ? "Save changes" : "Save booking";
     });
   });
 
@@ -681,7 +665,7 @@
     picked = new Set(b.passes || []);
     $("f-name").value = b.name || "";
     $("f-mobile").value = b.mobile || "";
-    $("f-amount").value = b.amount || (b.passes ? (b.passes.length * 250) : 0);
+    $("f-amount").value = b.amount || 0;
     $("f-status").value = b.status || "paid";
     $("f-note").value = b.note || "";
     syncPassInput();
@@ -739,26 +723,46 @@
   });
 
   $("loginCancel").addEventListener("click", function(){ loginDlg.close(); });
+  function authErrorMessage(e){
+    var code = e && e.code ? e.code : "auth/error";
+    if (code === "auth/operation-not-allowed") return "Firebase Console me Authentication > Sign-in method > Email/Password enable karein.";
+    if (code === "auth/user-not-found" || code === "auth/wrong-password" || code === "auth/invalid-credential") return "Admin email ya password galat hai. Firebase me dandiya@gmail.com account check karein.";
+    if (code === "auth/unauthorized-domain") return "Is website ka domain Firebase Authentication ke Authorized domains me add karein.";
+    if (code === "auth/network-request-failed") return "Internet/Firebase connection check karein aur phir try karein.";
+    if (code === "not-admin") return "Yeh Firebase account admin account nahi hai.";
+    return "Firebase admin sign-in failed (" + code + ").";
+  }
   $("loginForm").addEventListener("submit", function(ev){
     ev.preventDefault();
     var email = $("loginEmail").value.trim().toLowerCase();
     var password = $("loginPassword").value;
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD){
-      // Sign in to Firebase too when this Email/Password user exists. This is
-      // needed by Firestore projects whose rules permit deletes only for an
-      // authenticated user, but a missing Firebase user must not block login.
-      var authAttempt = firebaseAuth
-        ? firebaseAuth.signInWithEmailAndPassword(email, password).catch(function(){ return null; })
-        : Promise.resolve();
-      authAttempt.then(function(){
+    // Admin actions must use a real Firebase session. A client-side password
+    // alone cannot satisfy Firestore rules and was the reason deletes failed.
+    if (!firebaseAuth){
+      $("loginError").textContent = "Cloud authentication is unavailable. Please check the Firebase connection.";
+      return;
+    }
+    var loginButton = $("loginForm").querySelector('[type="submit"]');
+    loginButton.disabled = true;
+    loginButton.textContent = "Logging in...";
+    firebaseAuth.signInWithEmailAndPassword(email, password).then(function(userCredential){
+      if (!userCredential.user || userCredential.user.email.toLowerCase() !== ADMIN_EMAIL){
+        return firebaseAuth.signOut().then(function(){
+          var err = new Error("This Firebase account is not an administrator.");
+          err.code = "not-admin";
+          throw err;
+        });
+      }
         isAdmin = true;
         $("loginError").textContent = "";
         loginDlg.close();
         render();
-      });
-    } else {
-      $("loginError").textContent = "Incorrect email or password.";
-    }
+    }).catch(function(e){
+      $("loginError").textContent = authErrorMessage(e);
+    }).then(function(){
+      loginButton.disabled = false;
+      loginButton.textContent = "Login";
+    });
   });
 
   render();
