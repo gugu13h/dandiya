@@ -4,817 +4,3543 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dandiya Ticket Register</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;800&family=Mukta:wght@400;500;700&display=swap" rel="stylesheet">
+
 <style>
-  :root{
-    --night:#190B32;
-    --night-2:#24114a;
-    --panel:#2d1657;
-    --ink:#FFF2D9;
-    --ink-dim:#c9b3e8;
-    --marigold:#FFB223;
-    --rani:#F0246B;
-    --teal:#19C6B2;
-    --line:rgba(255,242,217,.16);
-    --radius:14px;
-    box-sizing:border-box;
-    padding-top:env(safe-area-inset-top,0px);
-    padding-bottom:env(safe-area-inset-bottom,0px);
+:root{
+  --night:#190B32;
+  --night-2:#24114a;
+  --panel:#2d1657;
+  --ink:#FFF2D9;
+  --ink-dim:#c9b3e8;
+  --marigold:#FFB223;
+  --rani:#F0246B;
+  --teal:#19C6B2;
+  --line:rgba(255,242,217,.16);
+  --radius:14px;
+  box-sizing:border-box;
+}
+
+*,*::before,*::after{
+  box-sizing:border-box
+}
+
+html{
+  scroll-padding-top:env(safe-area-inset-top,0px);
+  -webkit-text-size-adjust:100%
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(900px 500px at 12% -8%,rgba(240,36,107,.30),transparent 60%),
+    radial-gradient(800px 460px at 92% 4%,rgba(25,198,178,.22),transparent 62%),
+    var(--night);
+  color:var(--ink);
+  font-family:"Mukta",system-ui,"Segoe UI",sans-serif;
+  font-size:16px;
+  line-height:1.55;
+  min-height:100%;
+}
+
+h1,h2,h3,.disp{
+  font-family:"Baloo 2","Mukta",system-ui,sans-serif;
+  line-height:1.2;
+  margin:0
+}
+
+a{
+  color:var(--marigold)
+}
+
+.wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding:22px 16px 80px
+}
+
+header.top{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:18px;
+  align-items:center;
+  padding:18px 20px;
+  border-radius:22px;
+  background:linear-gradient(
+    135deg,
+    rgba(255,178,35,.15),
+    rgba(240,36,107,.12),
+    rgba(25,198,178,.08)
+  );
+  border:1px solid var(--line);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 18px 34px rgba(8,3,20,.24);
+}
+
+header.top::after{
+  content:"";
+  position:absolute;
+  inset:auto -40px -70px auto;
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  background:repeating-conic-gradient(
+    from 0deg,
+    rgba(255,178,35,.22) 0 12deg,
+    transparent 12deg 24deg
+  );
+  pointer-events:none;
+}
+
+.sticks{
+  width:54px;
+  height:54px;
+  flex:none;
+  filter:drop-shadow(0 8px 18px rgba(255,178,35,.24));
+}
+
+.top-copy{
+  position:relative;
+  z-index:1;
+  min-width:0
+}
+
+header.top h1{
+  font-size:clamp(28px,4.2vw,42px);
+  font-weight:800;
+  letter-spacing:.2px;
+  line-height:1.05
+}
+
+header.top p{
+  margin:6px 0 0;
+  color:var(--ink-dim);
+  font-size:15px;
+  max-width:620px
+}
+
+.top-actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:flex-end;
+  position:relative;
+  z-index:1
+}
+
+.top-actions .btn{
+  min-width:132px;
+  white-space:nowrap
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;
+  margin:16px 0 22px
+}
+
+.stat{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:12px 14px
+}
+
+.stat b{
+  display:block;
+  font-family:"Baloo 2",sans-serif;
+  font-size:26px;
+  font-weight:700
+}
+
+.stat span{
+  color:var(--ink-dim);
+  font-size:13px
+}
+
+.stat.gold b{color:var(--marigold)}
+.stat.teal b{color:var(--teal)}
+.stat.rani b{color:var(--rani)}
+
+.cols{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:22px
+}
+
+@media(min-width:900px){
+  .cols{
+    grid-template-columns:1fr 340px;
+    align-items:start
   }
-  *,*::before,*::after{box-sizing:border-box}
-  html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
-  body{
-    margin:0;
-    background:
-      radial-gradient(900px 500px at 12% -8%, rgba(240,36,107,.30), transparent 60%),
-      radial-gradient(800px 460px at 92% 4%, rgba(25,198,178,.22), transparent 62%),
-      var(--night);
-    color:var(--ink);
-    font-family:"Mukta",system-ui,"Segoe UI",sans-serif;
-    font-size:16px;line-height:1.55;
-    min-height:100%;
+}
+
+.board{
+  background:rgba(0,0,0,.18);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:16px
+}
+
+.board-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:12px
+}
+
+.board-head h2{
+  font-size:21px
+}
+
+.hint{
+  color:var(--ink-dim);
+  font-size:13px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(62px,1fr));
+  gap:8px
+}
+
+@media(min-width:620px){
+  .grid{
+    grid-template-columns:repeat(10,1fr)
   }
-  h1,h2,h3,.disp{font-family:"Baloo 2","Mukta",system-ui,sans-serif;line-height:1.2;margin:0}
-  a{color:var(--marigold)}
-  .wrap{max-width:1120px;margin:0 auto;padding:22px 16px 80px}
+}
+
+.pass{
+  position:relative;
+  aspect-ratio:1/1;
+  border-radius:50%;
+  border:1px dashed rgba(255,242,217,.3);
+  background:rgba(255,255,255,.04);
+  color:var(--ink);
+  font-family:"Baloo 2",sans-serif;
+  font-weight:600;
+  font-size:17px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  cursor:pointer;
+  padding:2px;
+  transition:transform .12s ease,box-shadow .12s ease
+}
+
+.pass:hover{
+  transform:translateY(-2px)
+}
+
+.pass:focus-visible{
+  outline:3px solid var(--marigold);
+  outline-offset:2px
+}
+
+.pass .who{
+  font-family:"Mukta",sans-serif;
+  font-weight:500;
+  font-size:9.5px;
+  line-height:1.1;
+  max-width:92%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  opacity:.9
+}
+
+.pass.taken{
+  border-style:solid;
+  border-color:rgba(0,0,0,.25);
+  color:#1a0d24;
+  box-shadow:
+    inset 0 -6px 12px rgba(0,0,0,.14),
+    0 3px 10px rgba(0,0,0,.3)
+}
+
+.pass.taken.due::after{
+  content:"";
+  position:absolute;
+  top:5px;
+  right:6px;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#1a0d24;
+  box-shadow:0 0 0 2px rgba(255,255,255,.55)
+}
+
+.pass.picked{
+  border:2px solid var(--marigold);
+  background:rgba(255,178,35,.2);
+  box-shadow:0 0 0 4px rgba(255,178,35,.18)
+}
+
+.pass.flash{
+  animation:flash 1.1s ease 2
+}
+
+@keyframes flash{
+  0%,100%{
+    box-shadow:0 0 0 0 rgba(255,255,255,0)
+  }
+  50%{
+    box-shadow:0 0 0 6px rgba(255,255,255,.5)
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .pass,.pass.flash,.btn{
+    transition:none;
+    animation:none
+  }
+}
+
+@media(max-width:720px){
+
+  .wrap{
+    padding:14px 12px 42px
+  }
 
   header.top{
-    display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;
-    padding:18px 20px;border-radius:22px;
-    background:linear-gradient(135deg,rgba(255,178,35,.15),rgba(240,36,107,.12),rgba(25,198,178,.08));
-    border:1px solid var(--line);
-    position:relative;overflow:hidden;box-shadow:0 18px 34px rgba(8,3,20,.24);
+    grid-template-columns:1fr;
+    gap:14px;
+    padding:16px 16px 18px
   }
-  header.top::after{
-    content:"";position:absolute;inset:auto -40px -70px auto;width:220px;height:220px;border-radius:50%;
-    background:repeating-conic-gradient(from 0deg,rgba(255,178,35,.22) 0 12deg,transparent 12deg 24deg);
-    pointer-events:none;
+
+  .top-actions{
+    justify-content:stretch;
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px
   }
-  .sticks{width:54px;height:54px;flex:none;filter:drop-shadow(0 8px 18px rgba(255,178,35,.24));}
-  .top-copy{position:relative;z-index:1;min-width:0}
-  header.top h1{font-size:clamp(28px,4.2vw,42px);font-weight:800;letter-spacing:.2px;line-height:1.05}
-  header.top p{margin:6px 0 0;color:var(--ink-dim);font-size:15px;max-width:620px}
-  .top-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end;position:relative;z-index:1}
-  .top-actions .btn{min-width:132px;white-space:nowrap}
 
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0 22px}
-  .stat{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
-  .stat b{display:block;font-family:"Baloo 2",sans-serif;font-size:26px;font-weight:700}
-  .stat span{color:var(--ink-dim);font-size:13px}
-  .stat.gold b{color:var(--marigold)} .stat.teal b{color:var(--teal)} .stat.rani b{color:var(--rani)}
-
-  .cols{display:grid;grid-template-columns:1fr;gap:22px}
-  @media(min-width:900px){.cols{grid-template-columns:1fr 340px;align-items:start}}
-
-  .board{background:rgba(0,0,0,.18);border:1px solid var(--line);border-radius:20px;padding:16px}
-  .board-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-  .board-head h2{font-size:21px}
-  .hint{color:var(--ink-dim);font-size:13px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:8px}
-  @media(min-width:620px){.grid{grid-template-columns:repeat(10,1fr)}}
-  .pass{
-    position:relative;aspect-ratio:1/1;border-radius:50%;
-    border:1px dashed rgba(255,242,217,.3);background:rgba(255,255,255,.04);
-    color:var(--ink);font-family:"Baloo 2",sans-serif;font-weight:600;font-size:17px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
-    cursor:pointer;padding:2px;transition:transform .12s ease,box-shadow .12s ease;
+  .top-actions .btn{
+    min-width:0;
+    width:100%
   }
-  .pass:hover{transform:translateY(-2px)}
-  .pass:focus-visible{outline:3px solid var(--marigold);outline-offset:2px}
-  .pass .who{font-family:"Mukta",sans-serif;font-weight:500;font-size:9.5px;line-height:1.1;max-width:92%;
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.9}
-  .pass.taken{border-style:solid;border-color:rgba(0,0,0,.25);color:#1a0d24;
-    box-shadow:inset 0 -6px 12px rgba(0,0,0,.14), 0 3px 10px rgba(0,0,0,.3)}
-  .pass.taken.due::after{content:"";position:absolute;top:5px;right:6px;width:8px;height:8px;border-radius:50%;
-    background:#1a0d24;box-shadow:0 0 0 2px rgba(255,255,255,.55)}
-  .pass.picked{border:2px solid var(--marigold);background:rgba(255,178,35,.2);box-shadow:0 0 0 4px rgba(255,178,35,.18)}
-  .pass.flash{animation:flash 1.1s ease 2}
-  @keyframes flash{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}50%{box-shadow:0 0 0 6px rgba(255,255,255,.5)}}
-  @media(prefers-reduced-motion:reduce){.pass,.pass.flash,.btn{transition:none;animation:none}}
 
-  @media (max-width: 720px){
-    .wrap{padding:14px 12px 42px}
-    header.top{grid-template-columns:1fr;gap:14px;padding:16px 16px 18px}
-    .top-actions{justify-content:stretch;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .top-actions .btn{min-width:0;width:100%}
-    .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats{
+    grid-template-columns:repeat(2,minmax(0,1fr))
   }
-  @media (max-width: 470px){
-    .stats{grid-template-columns:1fr}
-    .top-actions{grid-template-columns:1fr}
-    .row2{grid-template-columns:1fr}
-    .board{padding:14px}
-    .panel{padding:16px}
-    .grid{gap:7px}
+}
+
+@media(max-width:470px){
+
+  .stats{
+    grid-template-columns:1fr
   }
-  @media(min-width:900px){.panel{position:sticky;top:18px}}
 
-  .panel{background:linear-gradient(180deg,var(--panel),var(--night-2));border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 18px 32px rgba(9,4,24,.22)}
-  .panel h2{font-size:22px;margin-bottom:4px}
-  .panel .hint{margin-bottom:14px;display:block}
-  label{display:block;font-size:13px;color:var(--ink-dim);margin:10px 0 4px}
-  input[type=text],input[type=tel],input[type=number],input[type=password],textarea,select{
-    width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);
-    background:rgba(0,0,0,.25);color:var(--ink);font:inherit;font-size:15px;
+  .top-actions{
+    grid-template-columns:1fr
   }
-  textarea{min-height:56px;resize:vertical}
-  input:focus,textarea:focus,select:focus{outline:2px solid var(--marigold);outline-offset:1px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;min-height:30px}
-  .chip{background:var(--marigold);color:#2a1300;border-radius:999px;padding:3px 10px;font-weight:700;font-size:13px;
-    display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer;font-family:"Baloo 2",sans-serif}
-  .chip small{opacity:.7;font-size:14px}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .btn{border:none;border-radius:12px;padding:12px 16px;font-family:"Baloo 2",sans-serif;font-weight:700;font-size:16px;cursor:pointer;transition:transform .12s ease, filter .12s ease, box-shadow .12s ease}
-  .btn:hover{transform:translateY(-1px)}
-  .btn-main{background:linear-gradient(135deg,var(--rani),#ff5b8b);color:#fff;width:100%;margin-top:14px;box-shadow:0 10px 24px rgba(240,36,107,.28)}
-  .btn-main:hover{filter:brightness(1.08)}
-  .btn-ghost{background:rgba(255,255,255,.06);color:var(--ink);border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
-  .btn-danger{background:rgba(240,36,107,.18);color:#ffb9cf;border:1px solid rgba(240,36,107,.5)}
-  .btn:focus-visible{outline:3px solid var(--marigold);outline-offset:2px}
-  .msg{margin-top:10px;font-size:14px;min-height:20px;color:var(--marigold)}
-  .msg.bad{color:#ff9db8}
 
-  .list{margin-top:22px}
-  .list h2{font-size:20px;margin-bottom:10px}
-  .bk{display:flex;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius);margin-bottom:8px;background:rgba(255,255,255,.04);cursor:pointer;width:100%;text-align:left;color:inherit;font:inherit}
-  .dot{width:14px;height:14px;border-radius:50%;flex:none}
-  .bk .nm{font-weight:700;font-family:"Baloo 2",sans-serif;font-size:17px}
-  .bk .sub{color:var(--ink-dim);font-size:13px}
-  .bk .amt{margin-left:auto;text-align:right;font-family:"Baloo 2",sans-serif;font-size:17px;white-space:nowrap}
-  .tag{font-size:11px;padding:1px 8px;border-radius:999px;font-family:"Mukta",sans-serif;font-weight:700}
-  .tag.paid{background:rgba(25,198,178,.2);color:var(--teal)}
-  .tag.due{background:rgba(255,178,35,.2);color:var(--marigold)}
-  .empty{color:var(--ink-dim);font-size:14px;padding:14px;border:1px dashed var(--line);border-radius:var(--radius)}
+  .row2{
+    grid-template-columns:1fr
+  }
 
-  dialog{border:none;padding:0;background:transparent;max-width:min(96vw,460px);width:100%;color:var(--ink)}
-  dialog::backdrop{background:rgba(10,4,24,.72)}
-  .sheet{background:linear-gradient(180deg,var(--panel),var(--night));border:1px solid var(--line);border-radius:20px;padding:18px;
-    padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
-  .sheet h3{font-size:24px;display:flex;align-items:center;gap:10px}
-  .kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dotted var(--line);font-size:15px}
-  .kv span:first-child{color:var(--ink-dim)}
-  .modal-passes{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 4px}
-  .mp{min-width:38px;text-align:center;border-radius:999px;padding:5px 11px;font-family:"Baloo 2",sans-serif;font-weight:700;color:#1a0d24}
-  .sheet-actions{display:flex;gap:8px;margin-top:16px}
-  .sheet-actions .btn{flex:1}
-  footer{color:var(--ink-dim);font-size:13px;text-align:center;margin-top:28px}
-  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-  .toolbar .btn{padding:8px 12px;font-size:14px}
-  .search{margin-top:10px}
-  .login-error{color:#ff9db8;font-size:14px;min-height:20px;margin-top:8px}
+  .board{
+    padding:14px
+  }
+
+  .panel{
+    padding:16px
+  }
+
+  .grid{
+    gap:7px
+  }
+}
+
+@media(min-width:900px){
+  .panel{
+    position:sticky;
+    top:18px
+  }
+}
+
+.panel{
+  background:linear-gradient(180deg,var(--panel),var(--night-2));
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 18px 32px rgba(9,4,24,.22)
+}
+
+.panel h2{
+  font-size:22px;
+  margin-bottom:4px
+}
+
+.panel .hint{
+  margin-bottom:14px;
+  display:block
+}
+
+label{
+  display:block;
+  font-size:13px;
+  color:var(--ink-dim);
+  margin:10px 0 4px
+}
+
+input[type=text],
+input[type=tel],
+input[type=number],
+input[type=password],
+textarea,
+select{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.25);
+  color:var(--ink);
+  font:inherit;
+  font-size:15px
+}
+
+textarea{
+  min-height:56px;
+  resize:vertical
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  outline:2px solid var(--marigold);
+  outline-offset:1px
+}
+
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:6px;
+  min-height:30px
+}
+
+.chip{
+  background:var(--marigold);
+  color:#2a1300;
+  border-radius:999px;
+  padding:3px 10px;
+  font-weight:700;
+  font-size:13px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border:none;
+  cursor:pointer;
+  font-family:"Baloo 2",sans-serif
+}
+
+.chip small{
+  opacity:.7;
+  font-size:14px
+}
+
+.row2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px
+}
+
+.btn{
+  border:none;
+  border-radius:12px;
+  padding:12px 16px;
+  font-family:"Baloo 2",sans-serif;
+  font-weight:700;
+  font-size:16px;
+  cursor:pointer;
+  transition:transform .12s ease,filter .12s ease,box-shadow .12s ease
+}
+
+.btn:hover{
+  transform:translateY(-1px)
+}
+
+.btn-main{
+  background:linear-gradient(135deg,var(--rani),#ff5b8b);
+  color:#fff;
+  width:100%;
+  margin-top:14px;
+  box-shadow:0 10px 24px rgba(240,36,107,.28)
+}
+
+.btn-main:hover{
+  filter:brightness(1.08)
+}
+
+.btn-ghost{
+  background:rgba(255,255,255,.06);
+  color:var(--ink);
+  border:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04)
+}
+
+.btn-danger{
+  background:rgba(240,36,107,.18);
+  color:#ffb9cf;
+  border:1px solid rgba(240,36,107,.5)
+}
+
+.btn:focus-visible{
+  outline:3px solid var(--marigold);
+  outline-offset:2px
+}
+
+.msg{
+  margin-top:10px;
+  font-size:14px;
+  min-height:20px;
+  color:var(--marigold)
+}
+
+.msg.bad{
+  color:#ff9db8
+}
+
+.list{
+  margin-top:22px
+}
+
+.list h2{
+  font-size:20px;
+  margin-bottom:10px
+}
+
+.bk{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  margin-bottom:8px;
+  background:rgba(255,255,255,.04);
+  cursor:pointer;
+  width:100%;
+  text-align:left;
+  color:inherit;
+  font:inherit
+}
+
+.dot{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  flex:none
+}
+
+.bk .nm{
+  font-weight:700;
+  font-family:"Baloo 2",sans-serif;
+  font-size:17px
+}
+
+.bk .sub{
+  color:var(--ink-dim);
+  font-size:13px
+}
+
+.bk .amt{
+  margin-left:auto;
+  text-align:right;
+  font-family:"Baloo 2",sans-serif;
+  font-size:17px;
+  white-space:nowrap
+}
+
+.tag{
+  font-size:11px;
+  padding:1px 8px;
+  border-radius:999px;
+  font-family:"Mukta",sans-serif;
+  font-weight:700
+}
+
+.tag.paid{
+  background:rgba(25,198,178,.2);
+  color:var(--teal)
+}
+
+.tag.due{
+  background:rgba(255,178,35,.2);
+  color:var(--marigold)
+}
+
+.empty{
+  color:var(--ink-dim);
+  font-size:14px;
+  padding:14px;
+  border:1px dashed var(--line);
+  border-radius:var(--radius)
+}
+
+dialog{
+  border:none;
+  padding:0;
+  background:transparent;
+  max-width:min(96vw,460px);
+  width:100%;
+  color:var(--ink)
+}
+
+dialog::backdrop{
+  background:rgba(10,4,24,.72)
+}
+
+.sheet{
+  background:linear-gradient(180deg,var(--panel),var(--night));
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:18px;
+  padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))
+}
+
+.sheet h3{
+  font-size:24px;
+  display:flex;
+  align-items:center;
+  gap:10px
+}
+
+.kv{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:8px 0;
+  border-bottom:1px dotted var(--line);
+  font-size:15px
+}
+
+.kv span:first-child{
+  color:var(--ink-dim)
+}
+
+.modal-passes{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:12px 0 4px
+}
+
+.mp{
+  min-width:38px;
+  text-align:center;
+  border-radius:999px;
+  padding:5px 11px;
+  font-family:"Baloo 2",sans-serif;
+  font-weight:700;
+  color:#1a0d24
+}
+
+.sheet-actions{
+  display:flex;
+  gap:8px;
+  margin-top:16px
+}
+
+.sheet-actions .btn{
+  flex:1
+}
+
+footer{
+  color:var(--ink-dim);
+  font-size:13px;
+  text-align:center;
+  margin-top:28px
+}
+
+.toolbar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px
+}
+
+.toolbar .btn{
+  padding:8px 12px;
+  font-size:14px
+}
+
+.search{
+  margin-top:10px
+}
+
+.login-error{
+  color:#ff9db8;
+  font-size:14px;
+  min-height:20px;
+  margin-top:8px
+}
+
+.firebase-status{
+  margin-top:10px;
+  padding:8px 10px;
+  border-radius:9px;
+  font-size:13px;
+  background:rgba(255,255,255,.05);
+  color:var(--ink-dim)
+}
+
+.firebase-status.ok{
+  color:var(--teal)
+}
+
+.firebase-status.bad{
+  color:#ff9db8
+}
 </style>
 </head>
+
 <body>
+
 <div class="wrap">
 
-  <header class="top">
-    <svg class="sticks" viewBox="0 0 64 64" aria-hidden="true">
-      <g stroke-linecap="round">
-        <line x1="14" y1="54" x2="46" y2="12" stroke="#FFB223" stroke-width="7"/>
-        <line x1="18" y1="12" x2="50" y2="54" stroke="#F0246B" stroke-width="7"/>
-        <circle cx="14" cy="54" r="5" fill="#19C6B2"/><circle cx="46" cy="12" r="5" fill="#19C6B2"/>
-        <circle cx="18" cy="12" r="5" fill="#FFF2D9"/><circle cx="50" cy="54" r="5" fill="#FFF2D9"/>
-      </g>
-    </svg>
-    <div class="top-copy">
-      <h1>Dandiya Night Pass Register</h1>
-      <p id="modeText">Ticket 1 to 100 • colour-coded availability for fast booking</p>
-    </div>
-    <div class="top-actions">
-      <button class="btn btn-main" id="bookNowBtn" type="button">Book now</button>
-      <button class="btn btn-ghost" id="adminBtn" type="button">Admin login</button>
-    </div>
-  </header>
+<header class="top">
 
-  <div class="stats" id="stats"></div>
+<svg class="sticks" viewBox="0 0 64 64" aria-hidden="true">
+<g stroke-linecap="round">
+<line x1="14" y1="54" x2="46" y2="12" stroke="#FFB223" stroke-width="7"/>
+<line x1="18" y1="12" x2="50" y2="54" stroke="#F0246B" stroke-width="7"/>
+<circle cx="14" cy="54" r="5" fill="#19C6B2"/>
+<circle cx="46" cy="12" r="5" fill="#19C6B2"/>
+<circle cx="18" cy="12" r="5" fill="#FFF2D9"/>
+<circle cx="50" cy="54" r="5" fill="#FFF2D9"/>
+</g>
+</svg>
 
-  <div class="cols">
-    <section class="board">
-      <div class="board-head">
-        <h2>Ticket board</h2>
-        <span class="hint" id="boardHint">Booked Ticket are shown by colour.</span>
-      </div>
-      <div class="grid" id="grid"></div>
+<div class="top-copy">
+<h1>Dandiya Night Pass Register</h1>
+<p id="modeText">
+Ticket 1 to 100 • colour-coded availability for fast booking
+</p>
+</div>
 
-      <div class="list" id="bookingList" hidden>
-        <h2>All bookings</h2>
-        <input class="search" type="text" id="search" placeholder="Search by name or mobile" aria-label="Search bookings">
-        <div id="list" style="margin-top:10px"></div>
-        <div class="toolbar">
-          <button class="btn btn-ghost" id="exportBtn">Download CSV</button>
-        </div>
-      </div>
-    </section>
+<div class="top-actions">
+<button class="btn btn-main" id="bookNowBtn" type="button">
+Book now
+</button>
 
-    <aside class="panel" id="bookingPanel" hidden>
-      <h2 id="formTitle">New booking</h2>
-      <span class="hint" id="formHint">Pick Ticket numbers on the board, or type them below (e.g. 7, 12, 20-22)</span>
+<button class="btn btn-ghost" id="adminBtn" type="button">
+Admin login
+</button>
+</div>
 
-      <label for="f-name">Name</label>
-      <input type="text" id="f-name" placeholder="e.g. Rohit Sharma" autocomplete="name">
+</header>
 
-      <label for="f-passes">Ticket numbers</label>
-      <input type="text" id="f-passes" placeholder="7, 12, 20-22" inputmode="numeric">
-      <div class="chips" id="chips"></div>
+<div class="stats" id="stats"></div>
 
-      <div class="row2">
-        <div>
-          <label for="f-mobile">Mobile number</label>
-          <input type="tel" id="f-mobile" placeholder="10 digits" inputmode="numeric" autocomplete="tel">
-        </div>
-        <div>
-          <label for="f-amount">Total amount (Rs)</label>
-          <input type="number" id="f-amount" placeholder="Auto: Rs 250 per ticket" min="0" step="1" readonly aria-describedby="priceHint">
-        </div>
-      </div>
+<div class="cols">
 
-      <label for="f-status">Payment status</label>
-      <select id="f-status">
-        <option value="paid">Received</option>
-        <option value="due">Pending</option>
-      </select>
-      <span class="hint" id="priceHint">Ticket price: Rs 250 each</span>
+<section class="board">
 
-      <label for="f-note">Note (optional)</label>
-      <textarea id="f-note" placeholder="e.g. group leader, kids' passes"></textarea>
+<div class="board-head">
+<h2>Ticket board</h2>
 
-      <button class="btn btn-main" id="saveBtn">Save booking</button>
-      <button class="btn btn-ghost" id="cancelEdit" style="width:100%;margin-top:8px;display:none">Cancel edit</button>
-      <div class="msg" id="msg"></div>
-    </aside>
-  </div>
+<span class="hint" id="boardHint">
+Booked tickets are shown by colour.
+</span>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="list" id="bookingList" hidden>
+
+<h2>All bookings</h2>
+
+<input
+class="search"
+type="text"
+id="search"
+placeholder="Search by name or mobile"
+aria-label="Search bookings">
+
+<div id="list" style="margin-top:10px"></div>
+
+<div class="toolbar">
+
+<button class="btn btn-ghost" id="exportBtn">
+Download CSV
+</button>
+
+</div>
+</div>
+
+</section>
+
+<aside class="panel" id="bookingPanel">
+
+<h2 id="formTitle">New booking</h2>
+
+<span class="hint" id="formHint">
+Pick Ticket numbers on the board, or type them below
+(e.g. 7, 12, 20-22)
+</span>
+
+<label for="f-name">Name</label>
+
+<input
+type="text"
+id="f-name"
+placeholder="e.g. Rohit Sharma"
+autocomplete="name">
+
+<label for="f-passes">Ticket numbers</label>
+
+<input
+type="text"
+id="f-passes"
+placeholder="7, 12, 20-22"
+inputmode="numeric">
+
+<div class="chips" id="chips"></div>
+
+<div class="row2">
+
+<div>
+
+<label for="f-mobile">Mobile number</label>
+
+<input
+type="tel"
+id="f-mobile"
+placeholder="10 digits"
+inputmode="numeric"
+autocomplete="tel">
+
+</div>
+
+<div>
+
+<label for="f-amount">Total amount (Rs)</label>
+
+<input
+type="number"
+id="f-amount"
+placeholder="Auto: Rs 250 per ticket"
+min="0"
+step="1"
+readonly>
+
+</div>
+
+</div>
+
+<label for="f-status">Payment status</label>
+
+<select id="f-status">
+<option value="paid">Received</option>
+<option value="due">Pending</option>
+</select>
+
+<span class="hint">
+Ticket price: Rs 250 each
+</span>
+
+<label for="f-note">Note (optional)</label>
+
+<textarea
+id="f-note"
+placeholder="e.g. group leader, kids' passes"></textarea>
+
+<button class="btn btn-main" id="saveBtn">
+Save booking
+</button>
+
+<button
+class="btn btn-ghost"
+id="cancelEdit"
+style="width:100%;margin-top:8px;display:none">
+Cancel edit
+</button>
+
+<div class="msg" id="msg"></div>
+
+<div id="firebaseStatus" class="firebase-status">
+Connecting to Firebase...
+</div>
+
+</aside>
+
+</div>
 
 </div>
 
 <dialog id="dlg">
-  <div class="sheet" id="sheet"></div>
+
+<div class="sheet" id="sheet"></div>
+
 </dialog>
 
 <dialog id="loginDlg">
-  <form class="sheet" id="loginForm" method="dialog">
-    <h3>Admin login</h3>
-    <label for="loginEmail">Email</label>
-    <input type="text" id="loginEmail" autocomplete="username" required>
-    <label for="loginPassword">Password</label>
-    <input type="password" id="loginPassword" autocomplete="current-password" required>
-    <div class="login-error" id="loginError"></div>
-    <div class="sheet-actions">
-      <button class="btn btn-ghost" type="button" id="loginCancel">Cancel</button>
-      <button class="btn btn-main" type="submit">Login</button>
-    </div>
-  </form>
+
+<form class="sheet" id="loginForm">
+
+<h3>Admin login</h3>
+
+<label for="loginEmail">Email</label>
+
+<input
+type="email"
+id="loginEmail"
+autocomplete="username"
+required>
+
+<label for="loginPassword">Password</label>
+
+<input
+type="password"
+id="loginPassword"
+autocomplete="current-password"
+required>
+
+<div class="login-error" id="loginError"></div>
+
+<div class="sheet-actions">
+
+<button
+class="btn btn-ghost"
+type="button"
+id="loginCancel">
+Cancel
+</button>
+
+<button
+class="btn btn-main"
+type="submit">
+Login
+</button>
+
+</div>
+
+</form>
+
 </dialog>
 
-<!-- Firebase Web SDK. Paste this app's Firebase Web configuration below. -->
+
+<!-- Firebase SDK -->
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+
 <script>
+
 (function(){
-  "use strict";
-  var TOTAL = 100;
-  var TICKET_PRICE = 250;
-  var LS = "dandiya_pass_register_v1";
-  var ADMIN_EMAIL = "dandiya@gmail.com";
-  // Local fallback is used only when this Firebase project's Auth service is unavailable.
-  // For a production deployment, use Firebase Authentication instead of a client-side password.
-  var ADMIN_PASSWORD = "bholenath";
-  var ADMIN_SESSION = "dandiya_admin_session_v1";
-  // FIREBASE SETUP: paste the configuration object from Firebase Console here.
-  // Project settings > General > Your apps > Web app > SDK setup and configuration.
-  // Do not change the property names; only add the values between the quotes.
-  var FIREBASE_CONFIG = {
-    apiKey: "",             // e.g. AIza...
-    authDomain: "",         // e.g. your-project.firebaseapp.com
-    projectId: "",          // e.g. your-project-id
-    storageBucket: "",      // e.g. your-project.firebasestorage.app
-    messagingSenderId: "",  // e.g. 1234567890
-    appId: ""               // e.g. 1:1234567890:web:abc123
-  };
 
-  var PALETTE = ["#FFB223","#F0246B","#19C6B2","#7C5CFF","#FF7A3D","#4DD07A","#FF4FA3","#3FA9F5",
-                 "#E8D44D","#C77DFF","#FF6B6B","#2ED9C3","#F79D65","#9BE564","#FF9FB2","#5AC8FA"];
+"use strict";
 
-  var bookings = [];
-  var picked = new Set();
-  var editingId = null;
-  var isAdmin = false;
-  var dbNS = null, firebaseAuth = null;
-  var cloudReady = false;
 
-  var $ = function(id){ return document.getElementById(id); };
-  var grid = $("grid"), listEl = $("list"), dlg = $("dlg"), sheet = $("sheet"), loginDlg = $("loginDlg");
+/* =========================
+   BASIC SETTINGS
+========================= */
 
-  function localRead(){ try { return JSON.parse(localStorage.getItem(LS) || "[]"); } catch(e){ return []; } }
-  function localWrite(v){ try { localStorage.setItem(LS, JSON.stringify(v)); } catch(e){} }
+var TOTAL = 100;
 
-  function firebaseConfigured(){
-    return FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId && FIREBASE_CONFIG.appId;
+var TICKET_PRICE = 250;
+
+var LS = "dandiya_pass_register_v2";
+
+var ADMIN_EMAIL = "dandiya@gmail.com";
+
+var ADMIN_SESSION = "dandiya_admin_session_v2";
+
+
+/* =========================
+   FIREBASE CONFIG
+========================= */
+
+var FIREBASE_CONFIG = {
+
+  apiKey: "AIzaSyBAGAcraSbU52ifUAkKkvdUp6Tvj3HtX_o",
+
+  authDomain: "dindiya1.firebaseapp.com",
+
+  projectId: "dindiya1",
+
+  storageBucket: "dindiya1.firebasestorage.app",
+
+  messagingSenderId: "128605284309",
+
+  appId: "1:128605284309:web:929813b4eceb8a332bbf5c",
+
+  measurementId: "G-DWY7FXJLBS"
+
+};
+
+
+/* =========================
+   COLORS
+========================= */
+
+var PALETTE = [
+
+"#FFB223",
+"#F0246B",
+"#19C6B2",
+"#7C5CFF",
+"#FF7A3D",
+"#4DD07A",
+"#FF4FA3",
+"#3FA9F5",
+"#E8D44D",
+"#C77DFF",
+"#FF6B6B",
+"#2ED9C3",
+"#F79D65",
+"#9BE564",
+"#FF9FB2",
+"#5AC8FA"
+
+];
+
+
+/* =========================
+   VARIABLES
+========================= */
+
+var bookings = [];
+
+var picked = new Set();
+
+var editingId = null;
+
+var isAdmin = false;
+
+var dbNS = null;
+
+var firebaseAuth = null;
+
+var cloudReady = false;
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+var $ = function(id){
+
+  return document.getElementById(id);
+
+};
+
+var grid = $("grid");
+
+var listEl = $("list");
+
+var dlg = $("dlg");
+
+var sheet = $("sheet");
+
+var loginDlg = $("loginDlg");
+
+var firebaseStatus = $("firebaseStatus");
+
+
+/* =========================
+   LOCAL STORAGE
+========================= */
+
+function localRead(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem(LS) || "[]"
+    );
+
+  }catch(e){
+
+    return [];
+
   }
 
-  function startFirebase(){
-    if (!firebaseConfigured() || !window.firebase) {
-      say("Cloud connection is unavailable. Bookings are saved on this device.", true);
-      return;
-    }
-    try {
-      if (!window.firebase.apps.length) window.firebase.initializeApp(FIREBASE_CONFIG);
-      firebaseAuth = window.firebase.auth();
-      dbNS = window.firebase.firestore();
-      dbNS.collection("bookings").onSnapshot(function(snap){
-        var fromDb = snap.docs.map(function(d){ return Object.assign({ id: d.id }, d.data()); });
-        cloudReady = !snap.metadata.fromCache;
-        bookings = fromDb;
-        localWrite(fromDb);
-        render();
-      }, function(e){
-        cloudReady = false;
-        dbNS = null;
-        say("Cloud data could not be reached (" + (e && e.code ? e.code : "error") + "). Bookings are saved on this device.", true);
-      });
-      firebaseAuth.onAuthStateChanged(function(user){
-        var firebaseAdmin = !!(user && user.email && user.email.toLowerCase() === ADMIN_EMAIL);
-        isAdmin = firebaseAdmin || sessionStorage.getItem(ADMIN_SESSION) === "1";
-        render();
-      });
-    } catch(e){
-      dbNS = null;
-      say("Firebase configuration is invalid. Local data is being used.", true);
-    }
+}
+
+
+function localWrite(v){
+
+  try{
+
+    localStorage.setItem(
+      LS,
+      JSON.stringify(v)
+    );
+
+  }catch(e){}
+
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+function say(t,bad){
+
+  var m = $("msg");
+
+  m.textContent = t || "";
+
+  m.className =
+    "msg" +
+    (bad ? " bad" : "");
+
+}
+
+
+/* =========================
+   FIREBASE STATUS
+========================= */
+
+function firebaseMessage(text,type){
+
+  firebaseStatus.textContent = text;
+
+  firebaseStatus.className =
+    "firebase-status " +
+    (type || "");
+
+}
+
+
+/* =========================
+   FIREBASE CONFIG CHECK
+========================= */
+
+function firebaseConfigured(){
+
+  return !!(
+    FIREBASE_CONFIG.apiKey &&
+    FIREBASE_CONFIG.authDomain &&
+    FIREBASE_CONFIG.projectId &&
+    FIREBASE_CONFIG.appId
+  );
+
+}
+
+
+/* =========================
+   START FIREBASE
+========================= */
+
+function startFirebase(){
+
+  if(!firebaseConfigured()){
+
+    firebaseMessage(
+      "Firebase configuration missing.",
+      "bad"
+    );
+
+    return;
+
   }
 
-  function save(b){
-    if (dbNS){
-      if (!cloudReady){
-        var offlineError = new Error("Waiting for the shared booking data.");
-        offlineError.code = "cloud-not-ready";
-        return Promise.reject(offlineError);
+
+  if(!window.firebase){
+
+    firebaseMessage(
+      "Firebase SDK load nahi hua.",
+      "bad"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    if(!window.firebase.apps.length){
+
+      window.firebase.initializeApp(
+        FIREBASE_CONFIG
+      );
+
+    }
+
+
+    firebaseAuth =
+      window.firebase.auth();
+
+
+    dbNS =
+      window.firebase.firestore();
+
+
+    firebaseMessage(
+      "Connecting to Firestore...",
+      ""
+    );
+
+
+    /* =========================
+       FIRESTORE REAL-TIME DATA
+    ========================= */
+
+    dbNS
+      .collection("bookings")
+      .onSnapshot(
+
+        function(snap){
+
+          var fromDb =
+            snap.docs.map(function(doc){
+
+              return Object.assign(
+                {id:doc.id},
+                doc.data()
+              );
+
+            });
+
+
+          bookings = fromDb;
+
+          localWrite(fromDb);
+
+          cloudReady = true;
+
+          firebaseMessage(
+            "✓ Firebase connected • Data synced",
+            "ok"
+          );
+
+          render();
+
+        },
+
+        function(error){
+
+          console.error(
+            "Firestore error:",
+            error
+          );
+
+          cloudReady = false;
+
+          firebaseMessage(
+            "Firebase error: " +
+            (error.code || "unknown"),
+            "bad"
+          );
+
+          say(
+            "Firebase data load nahi ho paya. Firestore Rules check karein.",
+            true
+          );
+
+        }
+
+      );
+
+
+    /* =========================
+       AUTH STATE
+    ========================= */
+
+    firebaseAuth.onAuthStateChanged(
+      function(user){
+
+        var firebaseAdmin =
+          !!(
+            user &&
+            user.email &&
+            user.email.toLowerCase() ===
+            ADMIN_EMAIL
+          );
+
+
+        isAdmin =
+          firebaseAdmin ||
+          sessionStorage.getItem(
+            ADMIN_SESSION
+          ) === "1";
+
+
+        render();
+
       }
-      var d = Object.assign({}, b); delete d.id;
-      return dbNS.runTransaction(function(tx){
-        return tx.get(dbNS.collection("bookings")).then(function(snap){
-          var clash = null;
-          snap.forEach(function(doc){
-            if (doc.id === b.id) return;
-            var other = doc.data();
-            if ((other.passes || []).some(function(n){ return b.passes.indexOf(Number(n)) !== -1; })) clash = doc.id;
-          });
-          if (clash){
-            var err = new Error("One or more passes were just booked on another device.");
-            err.code = "pass-already-booked";
-            throw err;
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "Firebase initialization error:",
+      error
+    );
+
+    dbNS = null;
+
+    firebaseAuth = null;
+
+    cloudReady = false;
+
+    firebaseMessage(
+      "Firebase initialization failed.",
+      "bad"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   SAVE BOOKING
+========================= */
+
+function save(b){
+
+  if(!dbNS){
+
+    return Promise.reject(
+      new Error("Firebase not connected.")
+    );
+
+  }
+
+
+  if(!cloudReady){
+
+    var error =
+      new Error(
+        "Firebase data is not ready."
+      );
+
+    error.code =
+      "cloud-not-ready";
+
+    return Promise.reject(error);
+
+  }
+
+
+  var data =
+    Object.assign({},b);
+
+  delete data.id;
+
+
+  var collection =
+    dbNS.collection("bookings");
+
+
+  return dbNS.runTransaction(
+    function(transaction){
+
+      return transaction
+        .get(collection)
+        .then(function(snapshot){
+
+          var clash = false;
+
+
+          snapshot.forEach(
+            function(doc){
+
+              if(doc.id === b.id){
+
+                return;
+
+              }
+
+
+              var other =
+                doc.data();
+
+
+              var otherPasses =
+                Array.isArray(other.passes)
+                ? other.passes
+                : [];
+
+
+              var currentPasses =
+                Array.isArray(b.passes)
+                ? b.passes
+                : [];
+
+
+              if(
+                otherPasses.some(
+                  function(n){
+
+                    return currentPasses.indexOf(
+                      Number(n)
+                    ) !== -1;
+
+                  }
+                )
+              ){
+
+                clash = true;
+
+              }
+
+            }
+          );
+
+
+          if(clash){
+
+            var clashError =
+              new Error(
+                "Pass already booked."
+              );
+
+            clashError.code =
+              "pass-already-booked";
+
+            throw clashError;
+
           }
-          tx.set(dbNS.collection("bookings").doc(b.id), d);
+
+
+          transaction.set(
+            collection.doc(b.id),
+            data
+          );
+
         });
-      });
+
     }
-    var i = bookings.findIndex(function(x){ return x.id === b.id; });
-    if (i >= 0) bookings[i] = b; else bookings.push(b);
-    localWrite(bookings); render();
-    return Promise.resolve();
+  );
+
+}
+
+
+/* =========================
+   DELETE BOOKING
+========================= */
+
+function remove(id){
+
+  if(!dbNS){
+
+    return Promise.reject(
+      new Error("Firebase not connected.")
+    );
+
   }
 
-  function remove(id){
-    if (dbNS){
-      if (!cloudReady){
-        var offlineError = new Error("Waiting for the shared booking data.");
-        offlineError.code = "cloud-not-ready";
-        return Promise.reject(offlineError);
+
+  if(!cloudReady){
+
+    var error =
+      new Error(
+        "Firebase data is not ready."
+      );
+
+    error.code =
+      "cloud-not-ready";
+
+    return Promise.reject(error);
+
+  }
+
+
+  return dbNS
+    .collection("bookings")
+    .doc(id)
+    .delete();
+
+}
+
+
+/* =========================
+   INITIAL DATA
+========================= */
+
+bookings = localRead();
+
+startFirebase();
+
+
+/* =========================
+   BOOKING MAP
+========================= */
+
+function byPass(){
+
+  var map = {};
+
+
+  bookings.forEach(function(b){
+
+    (b.passes || []).forEach(
+      function(n){
+
+        map[Number(n)] = b;
+
       }
-      return dbNS.collection("bookings").doc(id).delete().catch(function(e){
-        throw e;
-      });
-    }
-    bookings = bookings.filter(function(x){ return x.id !== id; });
-    localWrite(bookings); render();
-    return Promise.resolve();
-  }
+    );
 
-  bookings = localRead();
-  startFirebase();
+  });
 
-  function byPass(){
-    var m = {};
-    bookings.forEach(function(b){ (b.passes||[]).forEach(function(n){ m[n] = b; }); });
-    return m;
-  }
-  function nextColor(){
-    var used = {};
-    bookings.forEach(function(b){ used[b.color] = (used[b.color]||0) + 1; });
-    var best = PALETTE[0], bestN = Infinity;
-    PALETTE.forEach(function(c){ var n = used[c]||0; if (n < bestN){ bestN = n; best = c; } });
-    return best;
-  }
-  function parsePasses(str){
-    var out = [];
-    String(str||"").split(/[,\s]+/).forEach(function(tok){
-      if (!tok) return;
-      var r = tok.match(/^(\d+)-(\d+)$/);
-      if (r){
-        var a = +r[1], b = +r[2];
-        if (a > b){ var t = a; a = b; b = t; }
-        for (var i = a; i <= b; i++) out.push(i);
-      } else if (/^\d+$/.test(tok)) out.push(+tok);
-    });
-    return out.filter(function(n){ return n >= 1 && n <= TOTAL; });
-  }
-  function short(name){ return String(name||"").trim().split(/\s+/)[0] || ""; }
-  function money(n){ return "Rs " + Number(n||0).toLocaleString("en-IN"); }
-  function say(t, bad){ var m = $("msg"); m.textContent = t || ""; m.className = "msg" + (bad ? " bad" : ""); }
 
-  function render(){
-    var map = byPass();
+  return map;
 
-    grid.innerHTML = "";
-    for (var n = 1; n <= TOTAL; n++){
-      var b = map[n];
-      var el = document.createElement("button");
-      el.type = "button";
-      el.className = "pass" + (b ? " taken" : "") + (b && b.status === "due" ? " due" : "") + (picked.has(n) ? " picked" : "");
-      el.dataset.n = n;
-      if (b){
-        el.style.background = b.color;
-        el.setAttribute("aria-label", "Pass " + n + " — booked");
-        el.innerHTML = '<span>' + n + '</span>';
-        if (isAdmin){
-          el.innerHTML += '<span class="who"></span>';
-          el.lastChild.textContent = short(b.name);
-        }
-      } else {
-        el.setAttribute("aria-label", "Pass " + n + " — free");
-        el.textContent = n;
-      }
-      grid.appendChild(el);
+}
+
+
+/* =========================
+   NEXT COLOR
+========================= */
+
+function nextColor(){
+
+  var used = {};
+
+
+  bookings.forEach(function(b){
+
+    used[b.color] =
+      (used[b.color] || 0) + 1;
+
+  });
+
+
+  var best =
+    PALETTE[0];
+
+  var bestN =
+    Infinity;
+
+
+  PALETTE.forEach(function(c){
+
+    var n =
+      used[c] || 0;
+
+
+    if(n < bestN){
+
+      bestN = n;
+
+      best = c;
+
     }
 
-    var takenCount = Object.keys(map).length;
-    var paid = 0, due = 0;
-    bookings.forEach(function(b){ if (b.status === "due") due += Number(b.amount||0); else paid += Number(b.amount||0); });
-    $("stats").innerHTML =
-      stat("gold", takenCount, "passes booked") +
-      stat("teal", TOTAL - takenCount, "still free") +
-      (isAdmin ? stat("", bookings.length, "bookings") +
-      stat("teal", money(paid), "collected") +
-      stat("rani", money(due), "pending") : "");
-
-    $("bookingList").hidden = !isAdmin;
-    $("bookingPanel").hidden = false;
-    $("modeText").textContent = isAdmin ? "Admin mode — manage all bookings" : "Passes 1 to 100 — booked passes are shown by colour";
-    $("boardHint").textContent = isAdmin ? "Tap a booked number for details, or use the form to add and edit bookings." : "Tap a free ticket to select it, then fill in your details and book.";
-    $("adminBtn").textContent = isAdmin ? "Logout" : "Admin login";
-    $("bookNowBtn").hidden = isAdmin;
-
-    if (!isAdmin) {
-      renderChips();
-      return;
-    }
-
-    var q = ($("search").value || "").trim().toLowerCase();
-    var shown = bookings.slice().sort(function(a, b){
-      return Math.min.apply(null, a.passes||[0]) - Math.min.apply(null, b.passes||[0]);
-    }).filter(function(b){
-      if (!q) return true;
-      return (b.name||"").toLowerCase().indexOf(q) > -1 || String(b.mobile||"").indexOf(q) > -1;
-    });
-
-    listEl.innerHTML = "";
-    if (!shown.length){
-      var e = document.createElement("div");
-      e.className = "empty";
-      e.textContent = bookings.length ? "No booking matches that search." : "No bookings yet. Pick numbers on the board to add the first one.";
-      listEl.appendChild(e);
-    }
-    shown.forEach(function(b){
-      var row = document.createElement("button");
-      row.type = "button"; row.className = "bk"; row.dataset.id = b.id;
-      var dot = document.createElement("span"); dot.className = "dot"; dot.style.background = b.color;
-      var mid = document.createElement("div");
-      var nm = document.createElement("div"); nm.className = "nm"; nm.textContent = b.name;
-      var sub = document.createElement("div"); sub.className = "sub";
-      sub.textContent = "Pass " + (b.passes||[]).join(", ") + (b.mobile ? " • " + b.mobile : "");
-      mid.appendChild(nm); mid.appendChild(sub);
-      var amt = document.createElement("div"); amt.className = "amt";
-      amt.innerHTML = money(b.amount) + '<br><span class="tag ' + (b.status === "due" ? "due" : "paid") + '">' +
-        (b.status === "due" ? "Pending" : "Received") + "</span>";
-      row.appendChild(dot); row.appendChild(mid); row.appendChild(amt);
-      listEl.appendChild(row);
-    });
-
-    renderChips();
-  }
-
-  function stat(cls, val, label){
-    return '<div class="stat ' + cls + '"><b>' + val + "</b><span>" + label + "</span></div>";
-  }
-
-  function renderChips(){
-    var c = $("chips"); c.innerHTML = "";
-    Array.from(picked).sort(function(a, b){ return a - b; }).forEach(function(n){
-      var chip = document.createElement("button");
-      chip.type = "button"; chip.className = "chip"; chip.dataset.drop = n;
-      chip.innerHTML = n + " <small>&#10005;</small>";
-      chip.title = "Remove pass " + n;
-      c.appendChild(chip);
-    });
-  }
-
-  grid.addEventListener("click", function(ev){
-    var el = ev.target.closest(".pass"); if (!el) return;
-    var n = +el.dataset.n, map = byPass(), b = map[n];
-    if (b && !isAdmin){ say("This pass is already booked. Please choose another available one.", true); return; }
-    if (b && (!editingId || b.id !== editingId)){ openDetail(b.id); return; }
-    if (picked.has(n)) picked.delete(n); else picked.add(n);
-    syncPassInput(); render();
   });
 
-  $("chips").addEventListener("click", function(ev){
-    var chip = ev.target.closest("[data-drop]"); if (!chip) return;
-    picked.delete(+chip.dataset.drop); syncPassInput(); render();
-  });
 
-  $("f-passes").addEventListener("input", function(){
-    picked = new Set(parsePasses(this.value));
-    updateAmount();
-    render();
-  });
+  return best;
 
-  function syncPassInput(){
-    $("f-passes").value = Array.from(picked).sort(function(a, b){ return a - b; }).join(", ");
-    updateAmount();
-  }
+}
 
-  function updateAmount(){
-    $("f-amount").value = picked.size ? picked.size * TICKET_PRICE : "";
-  }
 
-  $("search").addEventListener("input", render);
+/* =========================
+   PARSE PASSES
+========================= */
 
-  $("saveBtn").addEventListener("click", function(){
-    var name = $("f-name").value.trim();
-    var mobile = $("f-mobile").value.replace(/\D/g, "");
-    var list = Array.from(picked).sort(function(a, b){ return a - b; });
-    var amount = list.length * TICKET_PRICE;
+function parsePasses(str){
 
-    if (!name) return say("Enter a name.", true);
-    if (!list.length) return say("Pick at least one pass number.", true);
-    if (mobile && mobile.length !== 10) return say("Mobile number must be 10 digits.", true);
-    var map = byPass(), clash = list.filter(function(n){ return map[n] && map[n].id !== editingId; });
-    if (clash.length) return say("Pass " + clash.join(", ") + " already booked.", true);
+  var out = [];
 
-    var existing = editingId ? bookings.find(function(x){ return x.id === editingId; }) : null;
-    var b = {
-      id: editingId || ("b" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6)),
-      name: name, passes: list, mobile: mobile, amount: amount,
-      status: $("f-status").value, note: $("f-note").value.trim(),
-      color: existing ? existing.color : nextColor(),
-      created: existing ? existing.created : new Date().toISOString()
-    };
-    var saveButton = $("saveBtn");
-    saveButton.disabled = true;
-    saveButton.textContent = "Saving...";
-    save(b).then(function(){
-      say(editingId ? "Booking updated." : "Saved booking for " + name + ".");
-      resetForm();
-      setTimeout(function(){
-        list.forEach(function(n){
-          var el = grid.querySelector('.pass[data-n="' + n + '"]');
-          if (el) { el.classList.add("flash"); setTimeout(function(){ el.classList.remove("flash"); }, 2400); }
-        });
-      }, 60);
-    }).catch(function(e){
-      var code = e && e.code ? e.code : "error";
-      var message = code === "pass-already-booked"
-        ? "One or more selected passes have just been booked on another device. Please choose available passes."
-        : "Could not save (" + code + "). No booking was changed.";
-      say(message, true);
-    }).then(function(){
-      saveButton.disabled = false;
-      saveButton.textContent = editingId ? "Save changes" : "Save booking";
-    });
-  });
 
-  $("cancelEdit").addEventListener("click", function(){ resetForm(); say(""); });
+  String(str || "")
+    .split(/[,\s]+/)
+    .forEach(function(tok){
 
-  function resetForm(){
-    editingId = null; picked = new Set();
-    ["f-name","f-passes","f-mobile","f-amount","f-note"].forEach(function(id){ $(id).value = ""; });
-    $("f-status").value = "paid";
-    $("formTitle").textContent = "New booking";
-    $("formHint").textContent = "Pick pass numbers on the board, or type them below (e.g. 7, 12, 20-22)";
-    $("saveBtn").textContent = "Save booking";
-    $("cancelEdit").style.display = "none";
-    render();
-  }
+      if(!tok){
 
-  listEl.addEventListener("click", function(ev){
-    var row = ev.target.closest(".bk"); if (row) openDetail(row.dataset.id);
-  });
-
-  function openDetail(id){
-    if (!isAdmin) return;
-    var b = bookings.find(function(x){ return x.id === id; }); if (!b) return;
-    sheet.innerHTML = "";
-    var h = document.createElement("h3");
-    var d = document.createElement("span"); d.className = "dot"; d.style.background = b.color;
-    d.style.width = "18px"; d.style.height = "18px";
-    h.appendChild(d); h.appendChild(document.createTextNode(b.name));
-    sheet.appendChild(h);
-
-    var count = (b.passes||[]).length;
-    var sub = document.createElement("div"); sub.className = "hint";
-    sub.textContent = count + (count === 1 ? " pass under this name" : " passes under this name");
-    sheet.appendChild(sub);
-
-    var pw = document.createElement("div"); pw.className = "modal-passes";
-    (b.passes||[]).slice().sort(function(x, y){ return x - y; }).forEach(function(n){
-      var s = document.createElement("span"); s.className = "mp"; s.style.background = b.color; s.textContent = n;
-      pw.appendChild(s);
-    });
-    sheet.appendChild(pw);
-
-    sheet.appendChild(kv("Mobile", b.mobile ? '<a href="tel:' + b.mobile + '">' + b.mobile + "</a>" : "—", true));
-    sheet.appendChild(kv("Amount", money(b.amount)));
-    sheet.appendChild(kv("Payment", b.status === "due" ? "Pending" : "Received"));
-    sheet.appendChild(kv("Per pass", money(Math.round((b.amount||0) / Math.max(1, count)))));
-    if (b.note) sheet.appendChild(kv("Note", b.note));
-
-    var act = document.createElement("div"); act.className = "sheet-actions";
-    act.innerHTML =
-      '<button class="btn btn-ghost" data-act="edit">Edit</button>' +
-      '<button class="btn btn-danger" data-act="del">Delete</button>' +
-      '<button class="btn btn-ghost" data-act="close">Close</button>';
-    sheet.appendChild(act);
-
-    act.addEventListener("click", function(ev){
-      var a = ev.target.closest("[data-act]"); if (!a) return;
-      var which = a.dataset.act;
-      if (which === "close") dlg.close();
-      if (which === "edit"){ dlg.close(); startEdit(b.id); }
-      if (which === "del"){
-        if (confirm("Delete booking for " + b.name + "? Pass " + (b.passes||[]).join(", ") + " will become free again.")){
-          a.disabled = true;
-          a.textContent = "Deleting...";
-          remove(b.id).then(function(){
-            dlg.close();
-            say("Booking deleted. The pass is available again.");
-          }).catch(function(e){
-            a.disabled = false;
-            a.textContent = "Delete";
-            var code = e && e.code ? e.code : "error";
-            say("Could not delete this booking (" + code + "). Please try again.", true);
-          });
-        }
-      }
-    });
-    if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
-  }
-
-  function kv(k, v, html){
-    var row = document.createElement("div"); row.className = "kv";
-    var a = document.createElement("span"); a.textContent = k;
-    var b2 = document.createElement("span");
-    if (html) b2.innerHTML = v; else b2.textContent = v;
-    row.appendChild(a); row.appendChild(b2); return row;
-  }
-
-  function startEdit(id){
-    var b = bookings.find(function(x){ return x.id === id; }); if (!b) return;
-    editingId = id;
-    picked = new Set(b.passes || []);
-    $("f-name").value = b.name || "";
-    $("f-mobile").value = b.mobile || "";
-    $("f-amount").value = (b.passes || []).length * TICKET_PRICE;
-    $("f-status").value = b.status || "paid";
-    $("f-note").value = b.note || "";
-    syncPassInput();
-    $("formTitle").textContent = "Editing " + b.name;
-    $("formHint").textContent = "Tap the board to add or drop passes for this booking.";
-    $("saveBtn").textContent = "Save changes";
-    $("cancelEdit").style.display = "block";
-    say("");
-    render();
-    $("f-name").focus();
-  }
-
-  dlg.addEventListener("click", function(ev){ if (ev.target === dlg) dlg.close(); });
-
-  $("exportBtn").addEventListener("click", function(){
-    if (!isAdmin) return;
-    if (!bookings.length) return say("No bookings to export yet.", true);
-    var rows = [["Name","Passes","Mobile","Amount","Payment","Note"]];
-    bookings.forEach(function(b){
-      rows.push([b.name, (b.passes||[]).join(" "), b.mobile || "", b.amount || 0,
-                 b.status === "due" ? "Pending" : "Received", b.note || ""]);
-    });
-    var csv = rows.map(function(r){
-      return r.map(function(c){ return '"' + String(c).replace(/"/g, '""') + '"'; }).join(",");
-    }).join("\n");
-
-    if (window.claude && typeof window.claude.use === "function"){
-      window.claude.use("downloads").then(function(dl){
-        if (!dl){ say("Downloads are not available here.", true); return; }
-        dl.save({ filename: "dandiya-pass-list.csv", data: csv })
-          .then(function(){ say("CSV saved."); })
-          .catch(function(){ say("Download cancelled.", true); });
-      });
-    } else {
-      var blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
-      var url = URL.createObjectURL(blob);
-      var link = document.createElement("a");
-      link.href = url;
-      link.download = "dandiya-pass-list.csv";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
-      say("CSV downloaded.");
-    }
-  });
-
-  $("bookNowBtn").addEventListener("click", function(){
-    $("bookingPanel").scrollIntoView({ behavior: "smooth", block: "start" });
-    $("f-name").focus();
-  });
-
-  $("adminBtn").addEventListener("click", function(){
-    if (isAdmin){
-      isAdmin = false;
-      sessionStorage.removeItem(ADMIN_SESSION);
-      if (firebaseAuth) firebaseAuth.signOut().catch(function(){});
-      resetForm();
-      say("");
-      return;
-    }
-    $("loginEmail").value = "";
-    $("loginPassword").value = "";
-    $("loginError").textContent = "";
-    if (typeof loginDlg.showModal === "function") loginDlg.showModal(); else loginDlg.setAttribute("open", "");
-    $("loginEmail").focus();
-  });
-
-  $("loginCancel").addEventListener("click", function(){ loginDlg.close(); });
-  function authErrorMessage(e){
-    var code = e && e.code ? e.code : "auth/error";
-    if (code === "auth/operation-not-allowed") return "Firebase Console me Authentication > Sign-in method > Email/Password enable karein.";
-    if (code === "auth/user-not-found" || code === "auth/wrong-password" || code === "auth/invalid-credential") return "Admin email ya password galat hai. Firebase me dandiya@gmail.com account check karein.";
-    if (code === "auth/unauthorized-domain") return "Is website ka domain Firebase Authentication ke Authorized domains me add karein.";
-    if (code === "auth/network-request-failed") return "Internet/Firebase connection check karein aur phir try karein.";
-    if (code === "not-admin") return "Yeh Firebase account admin account nahi hai.";
-    return "Firebase admin sign-in failed (" + code + ").";
-  }
-
-  function loginLocally(){
-    sessionStorage.setItem(ADMIN_SESSION, "1");
-    isAdmin = true;
-    $("loginError").textContent = "";
-    loginDlg.close();
-    render();
-  }
-
-  $("loginForm").addEventListener("submit", function(ev){
-    ev.preventDefault();
-    var email = $("loginEmail").value.trim().toLowerCase();
-    var password = $("loginPassword").value;
-    var localCredentialsMatch = email === ADMIN_EMAIL && password === ADMIN_PASSWORD;
-    if (!firebaseAuth){
-      if (localCredentialsMatch) {
-        loginLocally();
-      } else {
-        $("loginError").textContent = "Admin email ya password galat hai.";
-      }
-      return;
-    }
-    var loginButton = $("loginForm").querySelector('[type="submit"]');
-    loginButton.disabled = true;
-    loginButton.textContent = "Logging in...";
-    firebaseAuth.signInWithEmailAndPassword(email, password).then(function(userCredential){
-      if (!userCredential.user || userCredential.user.email.toLowerCase() !== ADMIN_EMAIL){
-        return firebaseAuth.signOut().then(function(){
-          var err = new Error("This Firebase account is not an administrator.");
-          err.code = "not-admin";
-          throw err;
-        });
-      }
-      isAdmin = true;
-      $("loginError").textContent = "";
-      loginDlg.close();
-      render();
-    }).catch(function(e){
-      if (e && e.code === "auth/configuration-not-found" && localCredentialsMatch) {
-        loginLocally();
         return;
+
       }
-      $("loginError").textContent = authErrorMessage(e);
-    }).then(function(){
-      loginButton.disabled = false;
-      loginButton.textContent = "Login";
+
+
+      var r =
+        tok.match(/^(\d+)-(\d+)$/);
+
+
+      if(r){
+
+        var a = +r[1];
+
+        var b = +r[2];
+
+
+        if(a > b){
+
+          var t = a;
+
+          a = b;
+
+          b = t;
+
+        }
+
+
+        for(
+          var i = a;
+          i <= b;
+          i++
+        ){
+
+          out.push(i);
+
+        }
+
+      }else if(/^\d+$/.test(tok)){
+
+        out.push(+tok);
+
+      }
+
     });
+
+
+  return Array.from(
+    new Set(
+      out.filter(function(n){
+
+        return n >= 1 &&
+               n <= TOTAL;
+
+      })
+    )
+  );
+
+}
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function short(name){
+
+  return String(name || "")
+    .trim()
+    .split(/\s+/)[0] || "";
+
+}
+
+
+function money(n){
+
+  return "Rs " +
+    Number(n || 0)
+      .toLocaleString("en-IN");
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function render(){
+
+  var map =
+    byPass();
+
+
+  grid.innerHTML = "";
+
+
+  for(
+    var n = 1;
+    n <= TOTAL;
+    n++
+  ){
+
+    var b =
+      map[n];
+
+
+    var el =
+      document.createElement("button");
+
+
+    el.type = "button";
+
+
+    el.className =
+      "pass" +
+      (b ? " taken" : "") +
+      (
+        b &&
+        b.status === "due"
+        ? " due"
+        : ""
+      ) +
+      (
+        picked.has(n)
+        ? " picked"
+        : ""
+      );
+
+
+    el.dataset.n = n;
+
+
+    if(b){
+
+      el.style.background =
+        b.color || PALETTE[0];
+
+
+      el.setAttribute(
+        "aria-label",
+        "Pass " + n + " — booked"
+      );
+
+
+      el.innerHTML =
+        "<span>" +
+        n +
+        "</span>";
+
+
+      if(isAdmin){
+
+        el.innerHTML +=
+          '<span class="who"></span>';
+
+
+        el.lastChild.textContent =
+          short(b.name);
+
+      }
+
+
+    }else{
+
+      el.setAttribute(
+        "aria-label",
+        "Pass " + n + " — free"
+      );
+
+
+      el.textContent = n;
+
+    }
+
+
+    grid.appendChild(el);
+
+  }
+
+
+  var takenCount =
+    Object.keys(map).length;
+
+
+  var paid = 0;
+
+  var due = 0;
+
+
+  bookings.forEach(function(b){
+
+    if(b.status === "due"){
+
+      due += Number(b.amount || 0);
+
+    }else{
+
+      paid += Number(b.amount || 0);
+
+    }
+
   });
+
+
+  $("stats").innerHTML =
+    stat(
+      "gold",
+      takenCount,
+      "passes booked"
+    ) +
+
+    stat(
+      "teal",
+      TOTAL - takenCount,
+      "still free"
+    );
+
+
+  if(isAdmin){
+
+    $("stats").innerHTML +=
+
+      stat(
+        "",
+        bookings.length,
+        "bookings"
+      ) +
+
+      stat(
+        "teal",
+        money(paid),
+        "collected"
+      ) +
+
+      stat(
+        "rani",
+        money(due),
+        "pending"
+      );
+
+  }
+
+
+  $("bookingList").hidden =
+    !isAdmin;
+
+
+  $("bookingPanel").hidden =
+    false;
+
+
+  $("modeText").textContent =
+    isAdmin
+    ? "Admin mode — manage all bookings"
+    : "Passes 1 to 100 — booked passes are shown by colour";
+
+
+  $("boardHint").textContent =
+    isAdmin
+    ? "Tap a booked number for details, or use the form to add and edit bookings."
+    : "Tap a free ticket to select it, then fill in your details and book.";
+
+
+  $("adminBtn").textContent =
+    isAdmin
+    ? "Logout"
+    : "Admin login";
+
+
+  $("bookNowBtn").hidden =
+    isAdmin;
+
+
+  renderChips();
+
+
+  if(!isAdmin){
+
+    return;
+
+  }
+
+
+  var q =
+    ($("search").value || "")
+      .trim()
+      .toLowerCase();
+
+
+  var shown =
+    bookings
+      .slice()
+      .sort(function(a,b){
+
+        return (
+          Math.min.apply(
+            null,
+            a.passes || [0]
+          )
+          -
+          Math.min.apply(
+            null,
+            b.passes || [0]
+          )
+        );
+
+      })
+      .filter(function(b){
+
+        if(!q){
+
+          return true;
+
+        }
+
+
+        return (
+
+          (b.name || "")
+            .toLowerCase()
+            .indexOf(q) > -1
+
+        ) ||
+
+        String(
+          b.mobile || ""
+        ).indexOf(q) > -1;
+
+      });
+
+
+  listEl.innerHTML = "";
+
+
+  if(!shown.length){
+
+    var empty =
+      document.createElement("div");
+
+
+    empty.className =
+      "empty";
+
+
+    empty.textContent =
+      bookings.length
+      ? "No booking matches that search."
+      : "No bookings yet.";
+
+
+    listEl.appendChild(empty);
+
+  }
+
+
+  shown.forEach(function(b){
+
+    var row =
+      document.createElement("button");
+
+
+    row.type = "button";
+
+    row.className = "bk";
+
+    row.dataset.id = b.id;
+
+
+    var dot =
+      document.createElement("span");
+
+
+    dot.className = "dot";
+
+    dot.style.background =
+      b.color || PALETTE[0];
+
+
+    var mid =
+      document.createElement("div");
+
+
+    var nm =
+      document.createElement("div");
+
+
+    nm.className = "nm";
+
+    nm.textContent =
+      b.name || "";
+
+
+    var sub =
+      document.createElement("div");
+
+
+    sub.className = "sub";
+
+
+    sub.textContent =
+      "Pass " +
+      (b.passes || []).join(", ") +
+      (
+        b.mobile
+        ? " • " + b.mobile
+        : ""
+      );
+
+
+    mid.appendChild(nm);
+
+    mid.appendChild(sub);
+
+
+    var amt =
+      document.createElement("div");
+
+
+    amt.className = "amt";
+
+
+    amt.innerHTML =
+      money(b.amount) +
+      "<br>" +
+      '<span class="tag ' +
+      (
+        b.status === "due"
+        ? "due"
+        : "paid"
+      ) +
+      '">' +
+      (
+        b.status === "due"
+        ? "Pending"
+        : "Received"
+      ) +
+      "</span>";
+
+
+    row.appendChild(dot);
+
+    row.appendChild(mid);
+
+    row.appendChild(amt);
+
+    listEl.appendChild(row);
+
+  });
+
+}
+
+
+/* =========================
+   STAT
+========================= */
+
+function stat(cls,val,label){
+
+  return (
+    '<div class="stat ' +
+    cls +
+    '">' +
+    "<b>" +
+    val +
+    "</b>" +
+    "<span>" +
+    label +
+    "</span>" +
+    "</div>"
+  );
+
+}
+
+
+/* =========================
+   CHIPS
+========================= */
+
+function renderChips(){
+
+  var c =
+    $("chips");
+
+
+  c.innerHTML = "";
+
+
+  Array
+    .from(picked)
+    .sort(function(a,b){
+
+      return a-b;
+
+    })
+    .forEach(function(n){
+
+      var chip =
+        document.createElement("button");
+
+
+      chip.type = "button";
+
+      chip.className = "chip";
+
+      chip.dataset.drop = n;
+
+      chip.innerHTML =
+        n + " <small>&#10005;</small>";
+
+
+      chip.title =
+        "Remove pass " + n;
+
+
+      c.appendChild(chip);
+
+    });
+
+}
+
+
+/* =========================
+   BOARD CLICK
+========================= */
+
+grid.addEventListener(
+  "click",
+  function(ev){
+
+    var el =
+      ev.target.closest(".pass");
+
+
+    if(!el){
+
+      return;
+
+    }
+
+
+    var n =
+      +el.dataset.n;
+
+
+    var map =
+      byPass();
+
+
+    var b =
+      map[n];
+
+
+    if(b && !isAdmin){
+
+      say(
+        "This pass is already booked. Please choose another available one.",
+        true
+      );
+
+      return;
+
+    }
+
+
+    if(
+      b &&
+      (
+        !editingId ||
+        b.id !== editingId
+      )
+    ){
+
+      openDetail(b.id);
+
+      return;
+
+    }
+
+
+    if(picked.has(n)){
+
+      picked.delete(n);
+
+    }else{
+
+      picked.add(n);
+
+    }
+
+
+    syncPassInput();
+
+    render();
+
+  }
+);
+
+
+/* =========================
+   CHIP CLICK
+========================= */
+
+$("chips").addEventListener(
+  "click",
+  function(ev){
+
+    var chip =
+      ev.target.closest("[data-drop]");
+
+
+    if(!chip){
+
+      return;
+
+    }
+
+
+    picked.delete(
+      +chip.dataset.drop
+    );
+
+
+    syncPassInput();
+
+    render();
+
+  }
+);
+
+
+/* =========================
+   PASS INPUT
+========================= */
+
+$("f-passes").addEventListener(
+  "input",
+  function(){
+
+    picked =
+      new Set(
+        parsePasses(this.value)
+      );
+
+
+    updateAmount();
+
+    render();
+
+  }
+);
+
+
+/* =========================
+   SYNC INPUT
+========================= */
+
+function syncPassInput(){
+
+  $("f-passes").value =
+    Array
+      .from(picked)
+      .sort(function(a,b){
+
+        return a-b;
+
+      })
+      .join(", ");
+
+
+  updateAmount();
+
+}
+
+
+/* =========================
+   AMOUNT
+========================= */
+
+function updateAmount(){
+
+  $("f-amount").value =
+    picked.size
+    ? picked.size * TICKET_PRICE
+    : "";
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+$("search").addEventListener(
+  "input",
+  render
+);
+
+
+/* =========================
+   SAVE BUTTON
+========================= */
+
+$("saveBtn").addEventListener(
+  "click",
+  function(){
+
+    var name =
+      $("f-name").value.trim();
+
+
+    var mobile =
+      $("f-mobile")
+        .value
+        .replace(/\D/g,"");
+
+
+    var list =
+      Array
+        .from(picked)
+        .sort(function(a,b){
+
+          return a-b;
+
+        });
+
+
+    var amount =
+      list.length * TICKET_PRICE;
+
+
+    if(!name){
+
+      return say(
+        "Enter a name.",
+        true
+      );
+
+    }
+
+
+    if(!list.length){
+
+      return say(
+        "Pick at least one ticket number.",
+        true
+      );
+
+    }
+
+
+    if(
+      mobile &&
+      mobile.length !== 10
+    ){
+
+      return say(
+        "Mobile number must be 10 digits.",
+        true
+      );
+
+    }
+
+
+    var map =
+      byPass();
+
+
+    var clash =
+      list.filter(function(n){
+
+        return (
+          map[n] &&
+          map[n].id !== editingId
+        );
+
+      });
+
+
+    if(clash.length){
+
+      return say(
+        "Ticket " +
+        clash.join(", ") +
+        " already booked.",
+        true
+      );
+
+    }
+
+
+    var existing =
+      editingId
+      ? bookings.find(
+          function(x){
+            return x.id === editingId;
+          }
+        )
+      : null;
+
+
+    var id =
+      editingId ||
+      (
+        "b" +
+        Date.now().toString(36) +
+        Math.random()
+          .toString(36)
+          .slice(2,7)
+      );
+
+
+    var b = {
+
+      id:id,
+
+      name:name,
+
+      passes:list,
+
+      mobile:mobile,
+
+      amount:amount,
+
+      status:
+        $("f-status").value,
+
+      note:
+        $("f-note").value.trim(),
+
+      color:
+        existing
+        ? existing.color
+        : nextColor(),
+
+      created:
+        existing
+        ? existing.created
+        : new Date().toISOString()
+
+    };
+
+
+    var saveButton =
+      $("saveBtn");
+
+
+    saveButton.disabled =
+      true;
+
+
+    saveButton.textContent =
+      "Saving...";
+
+
+    say(
+      "Saving booking..."
+    );
+
+
+    save(b)
+
+      .then(function(){
+
+        say(
+          editingId
+          ? "Booking updated successfully."
+          : "Booking saved successfully."
+        );
+
+
+        resetForm();
+
+
+        setTimeout(function(){
+
+          list.forEach(function(n){
+
+            var el =
+              grid.querySelector(
+                '.pass[data-n="' +
+                n +
+                '"]'
+              );
+
+
+            if(el){
+
+              el.classList.add(
+                "flash"
+              );
+
+
+              setTimeout(
+                function(){
+
+                  el.classList.remove(
+                    "flash"
+                  );
+
+                },
+                2400
+              );
+
+            }
+
+          });
+
+        },60);
+
+      })
+
+      .catch(function(e){
+
+        console.error(
+          "Save error:",
+          e
+        );
+
+
+        var code =
+          e && e.code
+          ? e.code
+          : "error";
+
+
+        var message;
+
+
+        if(
+          code ===
+          "pass-already-booked"
+        ){
+
+          message =
+            "One or more selected tickets have just been booked on another device.";
+
+        }else if(
+          code ===
+          "permission-denied"
+        ){
+
+          message =
+            "Firestore permission denied. Firebase Rules check karein.";
+
+        }else if(
+          code ===
+          "cloud-not-ready"
+        ){
+
+          message =
+            "Firebase data abhi ready nahi hai. 2-3 seconds wait karke try karein.";
+
+        }else{
+
+          message =
+            "Could not save (" +
+            code +
+            ").";
+
+        }
+
+
+        say(
+          message,
+          true
+        );
+
+      })
+
+      .finally(function(){
+
+        saveButton.disabled =
+          false;
+
+
+        saveButton.textContent =
+          editingId
+          ? "Save changes"
+          : "Save booking";
+
+      });
+
+  }
+);
+
+
+/* =========================
+   RESET FORM
+========================= */
+
+$("cancelEdit").addEventListener(
+  "click",
+  function(){
+
+    resetForm();
+
+    say("");
+
+  }
+);
+
+
+function resetForm(){
+
+  editingId = null;
+
+  picked = new Set();
+
+
+  [
+    "f-name",
+    "f-passes",
+    "f-mobile",
+    "f-amount",
+    "f-note"
+  ].forEach(function(id){
+
+    $(id).value = "";
+
+  });
+
+
+  $("f-status").value =
+    "paid";
+
+
+  $("formTitle").textContent =
+    "New booking";
+
+
+  $("formHint").textContent =
+    "Pick Ticket numbers on the board, or type them below (e.g. 7, 12, 20-22)";
+
+
+  $("saveBtn").textContent =
+    "Save booking";
+
+
+  $("cancelEdit").style.display =
+    "none";
+
 
   render();
+
+}
+
+
+/* =========================
+   BOOKING LIST CLICK
+========================= */
+
+listEl.addEventListener(
+  "click",
+  function(ev){
+
+    var row =
+      ev.target.closest(".bk");
+
+
+    if(row){
+
+      openDetail(
+        row.dataset.id
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================
+   BOOKING DETAILS
+========================= */
+
+function openDetail(id){
+
+  if(!isAdmin){
+
+    return;
+
+  }
+
+
+  var b =
+    bookings.find(
+      function(x){
+        return x.id === id;
+      }
+    );
+
+
+  if(!b){
+
+    return;
+
+  }
+
+
+  sheet.innerHTML = "";
+
+
+  var h =
+    document.createElement("h3");
+
+
+  var d =
+    document.createElement("span");
+
+
+  d.className =
+    "dot";
+
+
+  d.style.background =
+    b.color || PALETTE[0];
+
+
+  d.style.width = "18px";
+
+  d.style.height = "18px";
+
+
+  h.appendChild(d);
+
+
+  h.appendChild(
+    document.createTextNode(
+      b.name || ""
+    )
+  );
+
+
+  sheet.appendChild(h);
+
+
+  var count =
+    (b.passes || []).length;
+
+
+  var sub =
+    document.createElement("div");
+
+
+  sub.className =
+    "hint";
+
+
+  sub.textContent =
+    count +
+    (
+      count === 1
+      ? " ticket under this name"
+      : " tickets under this name"
+    );
+
+
+  sheet.appendChild(sub);
+
+
+  var pw =
+    document.createElement("div");
+
+
+  pw.className =
+    "modal-passes";
+
+
+  (b.passes || [])
+    .slice()
+    .sort(function(x,y){
+
+      return x-y;
+
+    })
+    .forEach(function(n){
+
+      var s =
+        document.createElement("span");
+
+
+      s.className =
+        "mp";
+
+
+      s.style.background =
+        b.color || PALETTE[0];
+
+
+      s.textContent = n;
+
+
+      pw.appendChild(s);
+
+    });
+
+
+  sheet.appendChild(pw);
+
+
+  sheet.appendChild(
+    kv(
+      "Mobile",
+      b.mobile
+      ? '<a href="tel:' +
+        b.mobile +
+        '">' +
+        b.mobile +
+        "</a>"
+      : "—",
+      true
+    )
+  );
+
+
+  sheet.appendChild(
+    kv(
+      "Amount",
+      money(b.amount)
+    )
+  );
+
+
+  sheet.appendChild(
+    kv(
+      "Payment",
+      b.status === "due"
+      ? "Pending"
+      : "Received"
+    )
+  );
+
+
+  sheet.appendChild(
+    kv(
+      "Per ticket",
+      money(
+        Math.round(
+          (b.amount || 0) /
+          Math.max(
+            1,
+            count
+          )
+        )
+      )
+    )
+  );
+
+
+  if(b.note){
+
+    sheet.appendChild(
+      kv(
+        "Note",
+        b.note
+      )
+    );
+
+  }
+
+
+  var act =
+    document.createElement("div");
+
+
+  act.className =
+    "sheet-actions";
+
+
+  act.innerHTML =
+    '<button class="btn btn-ghost" data-act="edit">Edit</button>' +
+    '<button class="btn btn-danger" data-act="del">Delete</button>' +
+    '<button class="btn btn-ghost" data-act="close">Close</button>';
+
+
+  sheet.appendChild(act);
+
+
+  act.addEventListener(
+    "click",
+    function(ev){
+
+      var a =
+        ev.target.closest(
+          "[data-act]"
+        );
+
+
+      if(!a){
+
+        return;
+
+      }
+
+
+      var which =
+        a.dataset.act;
+
+
+      if(which === "close"){
+
+        dlg.close();
+
+      }
+
+
+      if(which === "edit"){
+
+        dlg.close();
+
+        startEdit(b.id);
+
+      }
+
+
+      if(which === "del"){
+
+        if(
+          confirm(
+            "Delete booking for " +
+            b.name +
+            "? Ticket " +
+            (b.passes || []).join(", ") +
+            " will become free again."
+          )
+        ){
+
+          a.disabled = true;
+
+          a.textContent =
+            "Deleting...";
+
+
+          remove(b.id)
+
+            .then(function(){
+
+              dlg.close();
+
+              say(
+                "Booking deleted. Ticket is available again."
+              );
+
+            })
+
+            .catch(function(e){
+
+              console.error(
+                "Delete error:",
+                e
+              );
+
+
+              a.disabled = false;
+
+              a.textContent =
+                "Delete";
+
+
+              say(
+                "Could not delete this booking (" +
+                (e.code || "error") +
+                ").",
+                true
+              );
+
+            });
+
+        }
+
+      }
+
+    }
+  );
+
+
+  if(
+    typeof dlg.showModal ===
+    "function"
+  ){
+
+    dlg.showModal();
+
+  }else{
+
+    dlg.setAttribute(
+      "open",
+      ""
+    );
+
+  }
+
+}
+
+
+/* =========================
+   KEY VALUE ROW
+========================= */
+
+function kv(k,v,html){
+
+  var row =
+    document.createElement("div");
+
+
+  row.className =
+    "kv";
+
+
+  var a =
+    document.createElement("span");
+
+
+  a.textContent = k;
+
+
+  var b2 =
+    document.createElement("span");
+
+
+  if(html){
+
+    b2.innerHTML = v;
+
+  }else{
+
+    b2.textContent = v;
+
+  }
+
+
+  row.appendChild(a);
+
+  row.appendChild(b2);
+
+
+  return row;
+
+}
+
+
+/* =========================
+   EDIT
+========================= */
+
+function startEdit(id){
+
+  var b =
+    bookings.find(
+      function(x){
+        return x.id === id;
+      }
+    );
+
+
+  if(!b){
+
+    return;
+
+  }
+
+
+  editingId = id;
+
+
+  picked =
+    new Set(
+      b.passes || []
+    );
+
+
+  $("f-name").value =
+    b.name || "";
+
+
+  $("f-mobile").value =
+    b.mobile || "";
+
+
+  $("f-amount").value =
+    (b.passes || []).length *
+    TICKET_PRICE;
+
+
+  $("f-status").value =
+    b.status || "paid";
+
+
+  $("f-note").value =
+    b.note || "";
+
+
+  syncPassInput();
+
+
+  $("formTitle").textContent =
+    "Editing " +
+    b.name;
+
+
+  $("formHint").textContent =
+    "Tap the board to add or remove tickets for this booking.";
+
+
+  $("saveBtn").textContent =
+    "Save changes";
+
+
+  $("cancelEdit").style.display =
+    "block";
+
+
+  say("");
+
+
+  render();
+
+
+  $("f-name").focus();
+
+}
+
+
+/* =========================
+   DIALOG
+========================= */
+
+dlg.addEventListener(
+  "click",
+  function(ev){
+
+    if(ev.target === dlg){
+
+      dlg.close();
+
+    }
+
+  }
+);
+
+
+/* =========================
+   EXPORT CSV
+========================= */
+
+$("exportBtn").addEventListener(
+  "click",
+  function(){
+
+    if(!isAdmin){
+
+      return;
+
+    }
+
+
+    if(!bookings.length){
+
+      return say(
+        "No bookings to export yet.",
+        true
+      );
+
+    }
+
+
+    var rows = [
+
+      [
+        "Name",
+        "Tickets",
+        "Mobile",
+        "Amount",
+        "Payment",
+        "Note"
+      ]
+
+    ];
+
+
+    bookings.forEach(
+      function(b){
+
+        rows.push([
+
+          b.name,
+
+          (b.passes || [])
+            .join(" "),
+
+          b.mobile || "",
+
+          b.amount || 0,
+
+          b.status === "due"
+          ? "Pending"
+          : "Received",
+
+          b.note || ""
+
+        ]);
+
+      }
+    );
+
+
+    var csv =
+      rows.map(function(r){
+
+        return r.map(
+          function(c){
+
+            return '"' +
+              String(c)
+                .replace(
+                  /"/g,
+                  '""'
+                ) +
+              '"';
+
+          }
+        ).join(",");
+
+      }).join("\n");
+
+
+    var blob =
+      new Blob(
+        ["\ufeff" + csv],
+        {
+          type:
+          "text/csv;charset=utf-8"
+        }
+      );
+
+
+    var url =
+      URL.createObjectURL(blob);
+
+
+    var link =
+      document.createElement("a");
+
+
+    link.href = url;
+
+    link.download =
+      "dandiya-pass-list.csv";
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+
+    setTimeout(
+      function(){
+
+        URL.revokeObjectURL(url);
+
+      },
+      1000
+    );
+
+
+    say(
+      "CSV downloaded."
+    );
+
+  }
+);
+
+
+/* =========================
+   BOOK NOW
+========================= */
+
+$("bookNowBtn").addEventListener(
+  "click",
+  function(){
+
+    $("bookingPanel")
+      .scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+
+
+    $("f-name").focus();
+
+  }
+);
+
+
+/* =========================
+   ADMIN LOGIN BUTTON
+========================= */
+
+$("adminBtn").addEventListener(
+  "click",
+  function(){
+
+    if(isAdmin){
+
+      isAdmin = false;
+
+
+      sessionStorage.removeItem(
+        ADMIN_SESSION
+      );
+
+
+      if(firebaseAuth){
+
+        firebaseAuth
+          .signOut()
+          .catch(function(){});
+
+      }
+
+
+      resetForm();
+
+      say("");
+
+      render();
+
+      return;
+
+    }
+
+
+    $("loginEmail").value = "";
+
+    $("loginPassword").value = "";
+
+    $("loginError").textContent = "";
+
+
+    if(
+      typeof loginDlg.showModal ===
+      "function"
+    ){
+
+      loginDlg.showModal();
+
+    }else{
+
+      loginDlg.setAttribute(
+        "open",
+        ""
+      );
+
+    }
+
+
+    $("loginEmail").focus();
+
+  }
+);
+
+
+/* =========================
+   LOGIN CANCEL
+========================= */
+
+$("loginCancel").addEventListener(
+  "click",
+  function(){
+
+    loginDlg.close();
+
+  }
+);
+
+
+/* =========================
+   AUTH ERROR
+========================= */
+
+function authErrorMessage(e){
+
+  var code =
+    e && e.code
+    ? e.code
+    : "auth/error";
+
+
+  if(
+    code ===
+    "auth/operation-not-allowed"
+  ){
+
+    return "Firebase Console me Authentication > Sign-in method > Email/Password enable karein.";
+
+  }
+
+
+  if(
+    code === "auth/user-not-found" ||
+    code === "auth/wrong-password" ||
+    code === "auth/invalid-credential"
+  ){
+
+    return "Admin email ya password galat hai.";
+
+  }
+
+
+  if(
+    code ===
+    "auth/unauthorized-domain"
+  ){
+
+    return "Firebase Authentication ke Authorized domains me apni website domain add karein.";
+
+  }
+
+
+  if(
+    code ===
+    "auth/network-request-failed"
+  ){
+
+    return "Internet/Firebase connection check karein.";
+
+  }
+
+
+  return (
+    "Firebase login failed (" +
+    code +
+    ")."
+  );
+
+}
+
+
+/* =========================
+   ADMIN LOGIN
+========================= */
+
+$("loginForm").addEventListener(
+  "submit",
+  function(ev){
+
+    ev.preventDefault();
+
+
+    var email =
+      $("loginEmail")
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    var password =
+      $("loginPassword").value;
+
+
+    if(!firebaseAuth){
+
+      $("loginError").textContent =
+        "Firebase Authentication connect nahi hua.";
+
+      return;
+
+    }
+
+
+    var loginButton =
+      $("loginForm")
+        .querySelector(
+          '[type="submit"]'
+        );
+
+
+    loginButton.disabled = true;
+
+    loginButton.textContent =
+      "Logging in...";
+
+
+    firebaseAuth
+      .signInWithEmailAndPassword(
+        email,
+        password
+      )
+
+      .then(function(userCredential){
+
+        var user =
+          userCredential.user;
+
+
+        if(
+          !user ||
+          !user.email ||
+          user.email.toLowerCase() !==
+          ADMIN_EMAIL
+        ){
+
+          return firebaseAuth
+            .signOut()
+            .then(function(){
+
+              var err =
+                new Error(
+                  "Not admin account."
+                );
+
+              err.code =
+                "not-admin";
+
+              throw err;
+
+            });
+
+        }
+
+
+        sessionStorage.setItem(
+          ADMIN_SESSION,
+          "1"
+        );
+
+
+        isAdmin = true;
+
+
+        $("loginError").textContent =
+          "";
+
+
+        loginDlg.close();
+
+
+        render();
+
+      })
+
+      .catch(function(e){
+
+        console.error(
+          "Login error:",
+          e
+        );
+
+
+        $("loginError").textContent =
+          authErrorMessage(e);
+
+      })
+
+      .finally(function(){
+
+        loginButton.disabled =
+          false;
+
+
+        loginButton.textContent =
+          "Login";
+
+      });
+
+  }
+);
+
+
+/* =========================
+   INITIAL RENDER
+========================= */
+
+render();
+
 })();
+
 </script>
+
 </body>
 </html>
