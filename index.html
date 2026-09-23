@@ -267,7 +267,7 @@
   </form>
 </dialog>
 
-<!-- Firebase Web SDK. Add your Firebase config in FIREBASE_CONFIG below. -->
+<!-- Firebase Web SDK. Paste this app's Firebase Web configuration below. -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -282,13 +282,16 @@
   // For a production deployment, use Firebase Authentication instead of a client-side password.
   var ADMIN_PASSWORD = "bholenath";
   var ADMIN_SESSION = "dandiya_admin_session_v1";
+  // FIREBASE SETUP: paste the configuration object from Firebase Console here.
+  // Project settings > General > Your apps > Web app > SDK setup and configuration.
+  // Do not change the property names; only add the values between the quotes.
   var FIREBASE_CONFIG = {
-    apiKey: "AIzaSyAl95M90CanRQCA6Tsc7PihGcCWAMYZ7bU",
-    authDomain: "dandiya-93c98.firebaseapp.com",
-    projectId: "dandiya-93c98",
-    storageBucket: "dandiya-93c98.firebasestorage.app",
-    messagingSenderId: "680481977297",
-    appId: "1:680481977297:web:b4fce04347f9608c3c66f0"
+    apiKey: "",             // e.g. AIza...
+    authDomain: "",         // e.g. your-project.firebaseapp.com
+    projectId: "",          // e.g. your-project-id
+    storageBucket: "",      // e.g. your-project.firebasestorage.app
+    messagingSenderId: "",  // e.g. 1234567890
+    appId: ""               // e.g. 1:1234567890:web:abc123
   };
 
   var PALETTE = ["#FFB223","#F0246B","#19C6B2","#7C5CFF","#FF7A3D","#4DD07A","#FF4FA3","#3FA9F5",
@@ -391,24 +394,6 @@
 
   bookings = localRead();
   startFirebase();
-
-  if (!dbNS && window.claude && typeof window.claude.use === "function"){
-    window.claude.use("db").then(function(ns){
-      if (!ns) return;
-      dbNS = ns;
-      ns.collection("bookings").onSnapshot(function(snap){
-        var fromDb = snap.docs.map(function(d){ return Object.assign({ id: d.id }, d.data()); });
-        cloudReady = !snap.metadata.fromCache;
-        bookings = fromDb;
-        localWrite(fromDb);
-        render();
-      }, function(e){
-        cloudReady = false;
-        dbNS = null;
-        say("Cloud data could not be reached (" + (e && e.code ? e.code : "error") + "). Bookings are saved on this device.", true);
-      });
-    }).catch(function(){});
-  }
 
   function byPass(){
     var m = {};
