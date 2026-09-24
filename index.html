@@ -1307,6 +1307,10 @@ function startFirebase(){
    SAVE BOOKING
 ========================= */
 
+/* =========================
+   SAVE BOOKING - FIXED
+========================= */
+
 function save(b){
 
   if(!dbNS){
@@ -1316,7 +1320,6 @@ function save(b){
     );
 
   }
-
 
   if(!cloudReady){
 
@@ -1333,8 +1336,12 @@ function save(b){
   }
 
 
+  /* =========================
+     PREPARE FIRESTORE DATA
+  ========================= */
+
   var data =
-    Object.assign({},b);
+    Object.assign({}, b);
 
   delete data.id;
 
@@ -1343,12 +1350,94 @@ function save(b){
     dbNS.collection("bookings");
 
 
-  return dbNS.runTransaction(
-    function(transaction){
+  /* =========================
+     CHECK TICKET CLASH
+  ========================= */
 
-      return transaction
-        .get(collection)
-        .then(function(snapshot){
+  return collection.get()
+
+    .then(function(snapshot){
+
+      var clash = false;
+
+
+      snapshot.forEach(function(doc){
+
+        /* Ignore the booking currently
+           being edited */
+
+        if(doc.id === b.id){
+
+          return;
+
+        }
+
+
+        var other =
+          doc.data() || {};
+
+
+        var otherPasses =
+          Array.isArray(other.passes)
+          ? other.passes
+          : [];
+
+
+        var currentPasses =
+          Array.isArray(b.passes)
+          ? b.passes
+          : [];
+
+
+        var hasClash =
+          otherPasses.some(function(n){
+
+            return currentPasses.indexOf(
+              Number(n)
+            ) !== -1;
+
+          });
+
+
+        if(hasClash){
+
+          clash = true;
+
+        }
+
+      });
+
+
+      /* =========================
+         TICKET ALREADY BOOKED
+      ========================= */
+
+      if(clash){
+
+        var clashError =
+          new Error(
+            "Pass already booked."
+          );
+
+        clashError.code =
+          "pass-already-booked";
+
+        throw clashError;
+
+      }
+
+
+      /* =========================
+         SAVE / UPDATE FIRESTORE
+      ========================= */
+
+      return collection
+        .doc(b.id)
+        .set(data);
+
+    });
+
+}
 
           var clash = false;
 
